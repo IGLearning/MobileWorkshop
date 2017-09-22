@@ -1,6 +1,8 @@
 package com.ig.igtradinggame.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +14,8 @@ import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.network.APIService;
 import com.ig.igtradinggame.network.client.CreateClientResponse;
 import com.ig.igtradinggame.presentation.CreateClientPresenter;
+import com.ig.igtradinggame.storage.ClientIDStorage;
+import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -36,6 +40,7 @@ public class MainActivity extends BaseActivity {
     TextView onCompleteText;
 
     private CreateClientPresenter presenter;
+    private ClientIDStorage clientIDStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +49,13 @@ public class MainActivity extends BaseActivity {
 
         setupViews();
         presenter = new CreateClientPresenter();
+        clientIDStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(this));
     }
 
     @OnClick(R.id.button_continue)
     public void onContinueClicked() {
         Log.d(TAG, "onContinueClicked");
+        startActivity(new Intent(this, TradingGameActivity.class));
     }
 
     @OnClick(R.id.button_submit)
@@ -61,6 +68,7 @@ public class MainActivity extends BaseActivity {
 
         if (proposedName.isEmpty()) {
             onCompleteText.setText("Team name is not valid");
+            stopProgressBar();
             return;
         }
 
@@ -71,6 +79,7 @@ public class MainActivity extends BaseActivity {
                 stopProgressBar();
                 onCompleteText.setText("Success! Retrieved ID: " + response.getClientId());
                 continueButton.setVisibility(View.VISIBLE);
+                clientIDStorage.saveClientID(response.getClientId());
             }
         });
     }
