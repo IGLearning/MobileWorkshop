@@ -1,6 +1,6 @@
 package com.ig.igtradinggame.network;
 
-final class BuildConfig {
+public final class BuildConfig {
     /**
      * Note that this is the default localhost address for
      * Android through the emulator. Remember, unless this is

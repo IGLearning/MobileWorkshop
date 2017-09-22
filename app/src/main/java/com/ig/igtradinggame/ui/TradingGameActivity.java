@@ -1,16 +1,20 @@
 package com.ig.igtradinggame.ui;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import com.ig.igtradinggame.R;
+import com.ig.igtradinggame.network.APIService;
+import com.ig.igtradinggame.network.APIServiceInterface;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 
 import butterknife.BindView;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 public class TradingGameActivity extends BaseActivity {
 
@@ -29,7 +33,7 @@ public class TradingGameActivity extends BaseActivity {
     @BindView(R.id.textView_openPositions)
     TextView openPositionsText;
 
-    private ClientIDStorage clientIDStorage;
+    private String clientID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +41,10 @@ public class TradingGameActivity extends BaseActivity {
         setContentView(R.layout.activity_trading_game);
 
         setAllTextViewsToText("Activity started. Loading....");
-        clientIDStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(this));
-        clientIdText.setText("FOUND CLIENT ID: " + clientIDStorage.loadClientId());
+        final ClientIDStorage clientIDStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(this));
+        clientID = clientIDStorage.loadClientId();
+        clientIdText.setText("CLIENT ID: " + clientID);
+        startViewUpdates();
     }
 
     private void setAllTextViewsToText(@NonNull final String text) {
@@ -53,6 +59,34 @@ public class TradingGameActivity extends BaseActivity {
     }
 
     private void loadBalance() {
+        if (clientID == null) {
+            //TODO
+            return;
+        }
 
+        APIServiceInterface apiService = new APIService();
+        apiService.getFundsForClient(clientID, 200)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@io.reactivex.annotations.NonNull Integer integer) {
+                        balanceText.setText(integer.toString());
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 }
