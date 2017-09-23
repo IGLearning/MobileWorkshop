@@ -7,7 +7,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ig.igtradinggame.network.client.CreateClientRequest;
 import com.ig.igtradinggame.network.client.CreateClientResponse;
+import com.ig.igtradinggame.network.market.Market;
 
+import java.sql.Time;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -47,7 +50,26 @@ public class APIService implements APIServiceInterface {
     }
 
     @Override
-    public void createClient(String username, final OnCompleteListener onCompleteListener) {
+    public void getMarkets(final OnMarketsLoadedCompleteListener listener) {
+        igTradingGameAPI.getAllMarkets().enqueue(new Callback<List<Market>>() {
+            @Override
+            public void onResponse(Call<List<Market>> call, Response<List<Market>> response) {
+                if (response.isSuccessful()) {
+                    listener.onComplete(response.body());
+                } else {
+                    Log.d("QuestionsCallback", "Code: " + response.code() + " Message: " + response.message());  // TODO: FIX LOGGING CHAOS
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Market>> call, Throwable t) {
+                Log.e("CREATE CLIENT", "onFailure: " + t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void createClient(String username, final OnCreateClientCompleteListener onCompleteListener) {
         final CreateClientRequest request = new CreateClientRequest(username);
 
         igTradingGameAPI.createClient(request).enqueue(new Callback<CreateClientResponse>() {
@@ -62,6 +84,7 @@ public class APIService implements APIServiceInterface {
 
             @Override
             public void onFailure(Call<CreateClientResponse> call, Throwable t) {
+                Log.e("CREATE CLIENT", "onFailure: " + t.getMessage());
                 t.printStackTrace();
             }
         });
@@ -87,7 +110,30 @@ public class APIService implements APIServiceInterface {
                 .retry();
     }
 
-    public interface OnCompleteListener {
+    public Observable<List<Market>> getTickingMarketList(final int updateFrequencyMillis) {
+        return Observable
+                .interval(updateFrequencyMillis, TimeUnit.MILLISECONDS)
+                .flatMap(new Function<Long, ObservableSource<List<Market>>>() {
+                    @Override
+                    public ObservableSource<List<Market>> apply(@io.reactivex.annotations.NonNull Long aLong) throws Exception {
+                        return igTradingGameAPI.getAllMarketsObservable();
+                    }
+                })
+                .doOnError(new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        //TODO: Log the error
+                        throwable.printStackTrace();
+                    }
+                })
+                .retry();
+    }
+
+    public interface OnCreateClientCompleteListener {
         void onComplete(CreateClientResponse response);
+    }
+
+    public interface OnMarketsLoadedCompleteListener {
+        void onComplete(List<Market> marketList);
     }
 }

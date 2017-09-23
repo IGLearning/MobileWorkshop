@@ -4,7 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Market {
-    @SerializedName("marketId")
+    @SerializedName("id")
     @Expose
     private String marketId;
 
@@ -15,4 +15,25 @@ public class Market {
     @SerializedName("currentPrice")
     @Expose
     private float currentPrice;
+
+    public String getMarketId() {
+        return marketId;
+    }
+
+    public String getMarketName() {
+        return marketName;
+    }
+
+    public float getCurrentPrice() {
+        return currentPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "Market{" +
+                "marketId='" + marketId + '\'' +
+                ", marketName='" + marketName + '\'' +
+                ", currentPrice=" + currentPrice +
+                '}';
+    }
 }

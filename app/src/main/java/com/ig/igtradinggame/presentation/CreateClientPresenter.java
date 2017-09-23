@@ -13,7 +13,7 @@ public class CreateClientPresenter {
         apiService = new APIService();
     }
 
-    public void submitCreateClientRequest(@NonNull final String username, @NonNull final APIService.OnCompleteListener onCompleteListener) {
-        apiService.createClient(username, onCompleteListener);
+    public void submitCreateClientRequest(@NonNull final String username, @NonNull final APIService.OnCreateClientCompleteListener onCreateClientCompleteListener) {
+        apiService.createClient(username, onCreateClientCompleteListener);
     }
 }

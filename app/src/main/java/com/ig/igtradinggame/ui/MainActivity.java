@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity {
         }
 
         //create the request
-        presenter.submitCreateClientRequest(proposedName, new APIService.OnCompleteListener() {
+        presenter.submitCreateClientRequest(proposedName, new APIService.OnCreateClientCompleteListener() {
             @Override
             public void onComplete(CreateClientResponse response) {
                 stopProgressBar();

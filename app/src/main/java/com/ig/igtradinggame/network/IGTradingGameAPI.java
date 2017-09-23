@@ -27,6 +27,9 @@ public interface IGTradingGameAPI {
     @GET("/workshop/marketData/allMarkets")
     Call<List<Market>> getAllMarkets();
 
+    @GET("/workshop/marketData/allMarkets")
+    Observable<List<Market>> getAllMarketsObservable();
+
     @GET("/workshop/marketData/allPrices")
     Call<List<PriceSnapshot>> getAllPrices();
 }
