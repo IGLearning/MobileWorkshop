@@ -18,8 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.TradingGameActivity"></activity>
-        <activity android:name=".ui.appintro.AppIntroActivity"></activity>
+        <activity android:name=".ui.TestTradingGameActivity" />
+        <activity android:name=".ui.appintro.AppIntroActivity" />
+        <activity
+            android:name=".ui.TradingGameActivity"
+            android:label="@string/title_activity_trading_game"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

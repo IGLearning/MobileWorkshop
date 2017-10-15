@@ -1,156 +1,110 @@
 package com.ig.igtradinggame.ui;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.widget.TextView;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.ig.igtradinggame.R;
-import com.ig.igtradinggame.network.IGAPIService;
-import com.ig.igtradinggame.models.MarketModel;
-import com.ig.igtradinggame.storage.ClientIDStorage;
-import com.ig.igtradinggame.storage.SharedPreferencesStorage;
-
-import java.util.List;
 
 import butterknife.BindView;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import butterknife.OnClick;
 
-public class TradingGameActivity extends BaseActivity {
-    private static int HEARTBEAT_FREQUENCY_MILLIS = 500;
+public class TradingGameActivity extends BaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    @BindView(R.id.textView_clientId)
-    TextView clientIdText;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    @BindView(R.id.textView_balance)
-    TextView balanceText;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
-    @BindView(R.id.textView_markets)
-    TextView marketsText;
+    @BindView(R.id.drawer_layout)
+    DrawerLayout drawer;
 
-    @BindView(R.id.textView_prices)
-    TextView pricesText;
-
-    @BindView(R.id.textView_openPositions)
-    TextView openPositionsText;
-
-    private String clientID;
-    private IGAPIService apiService;
-
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trading_game);
+        setContentView(R.layout.activity_trading_game2);
+        setSupportActionBar(toolbar);
 
-        apiService = new IGAPIService();
-        setAllTextViewsToText("Activity started. Loading....");
-        final ClientIDStorage clientIDStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(this));
-        clientID = clientIDStorage.loadClientId();
-        clientIdText.setText("CLIENT ID: " + clientID);
-        startViewUpdates();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @OnClick(R.id.fab)
+    public void onClickFab(View view) {
+        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
-    private void setAllTextViewsToText(@NonNull final String text) {
-        balanceText.setText(text);
-        marketsText.setText(text);
-        pricesText.setText(text);
-        openPositionsText.setText(text);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.trading_game, menu);
+        return true;
     }
 
-    private void startViewUpdates() {
-        loadBalance();
-        //setupMarkets();
-        loadMarkets();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-    }
-
-
-    private void loadOpenPositions() {
-
-    }
-
-    private void loadMarkets() {
-        apiService.getTickingMarketList(HEARTBEAT_FREQUENCY_MILLIS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<MarketModel>>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(@io.reactivex.annotations.NonNull List<MarketModel> markets) {
-                        StringBuilder builder = new StringBuilder();
-
-                        for (MarketModel marketModel : markets) {
-                            builder.append(marketModel.getMarketName());
-                            builder.append("\t\t\t");
-                            builder.append(marketModel.getMarketId());
-                            builder.append("\t\t\t");
-                            builder.append(marketModel.getCurrentPrice());
-                            builder.append("\t\t\t");
-                            builder.append("\n\n");
-                        }
-
-                        marketsText.setText(builder.toString());
-
-                    }
-
-                    @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    private void loadBalance() {
-        if (clientID == null) {
-            //TODO
-            assert (false);
-            return;
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
         }
 
-        apiService.getFundsForClient(clientID, HEARTBEAT_FREQUENCY_MILLIS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Integer>() {
-                    @Override
-                    public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+        return super.onOptionsItemSelected(item);
+    }
 
-                    }
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
 
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onNext(@io.reactivex.annotations.NonNull Integer integer) {
-                        balanceText.setText(integer.toString());
-                    }
+        if (id == R.id.nav_camera) {
+            // Handle the camera action
+        } else if (id == R.id.nav_gallery) {
 
-                    @Override
-                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+        } else if (id == R.id.nav_slideshow) {
 
-                    }
+        } else if (id == R.id.nav_manage) {
 
-                    @Override
-                    public void onComplete() {
+        } else if (id == R.id.nav_share) {
 
-                    }
-                });
+        } else if (id == R.id.nav_send) {
 
-        //FIXME: activity still streams, even when the activity is destroyed.
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }
