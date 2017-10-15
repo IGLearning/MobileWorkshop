@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.TradingGameActivity"></activity>
+        <activity android:name=".ui.IntroActivity"></activity>
     </application>
 
 </manifest>

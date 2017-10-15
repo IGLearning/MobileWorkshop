@@ -9,7 +9,6 @@ import com.ig.igtradinggame.network.client.CreateClientRequest;
 import com.ig.igtradinggame.network.client.CreateClientResponse;
 import com.ig.igtradinggame.network.market.Market;
 
-import java.sql.Time;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -108,6 +107,10 @@ public class APIService implements APIServiceInterface {
                     }
                 })
                 .retry();
+    }
+
+    public void getFundsForClient(final String clientID, final Callback<Integer> callback) {
+        igTradingGameAPI.getAvailableFundsSync(clientID).enqueue(callback);
     }
 
     public Observable<List<Market>> getTickingMarketList(final int updateFrequencyMillis) {

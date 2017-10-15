@@ -23,6 +23,9 @@ public interface IGTradingGameAPI {
     @GET("/workshop/client/funds/{clientId}")
     Observable<Integer> getAvailableFunds(@Path("clientId") String clientId);
 
+    @GET("/workshop/client/funds/{clientId}")
+    Call<Integer> getAvailableFundsSync(@Path("clientId") String clientId);
+
     // MARKET DATA CONTROLLER: Operations relating to market data
     @GET("/workshop/marketData/allMarkets")
     Call<List<Market>> getAllMarkets();
