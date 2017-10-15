@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text="Welcome to the IG Trading Game! This is the Android app used to play the game. I expect to find the server running at:" />
+
+            <EditText
+                android:id="@+id/editText_baseApiAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:ems="10"
+                android:enabled="false"
+                android:fontFamily="monospace"
+                android:inputType="textPersonName"
+                android:padding="20dp"
+                android:text="0.0.0.0"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/button_change_api"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@android:color/transparent"
+                android:gravity="right|center_vertical"
+                android:padding="20dp"
+                android:text="change" />
+
+            <Button
+                android:id="@+id/button_testConnection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@android:color/transparent"
+                android:gravity="right|center_vertical"
+                android:padding="20dp"
+                android:text="test connection"
+                android:textColor="#00AA8D" />
+
+            <TextView
+                android:id="@+id/textView_connectionSuccessful"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text="Connection Successful"
+                android:textAlignment="textEnd"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

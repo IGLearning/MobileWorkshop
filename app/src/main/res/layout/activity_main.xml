@@ -5,17 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ig.igtradinggame.MainActivity">
+    tools:context="com.ig.igtradinggame.ui.MainActivity">
 
-    <TextView
+    <Button
+        android:id="@+id/button_continue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Continue to next page"
+        android:layout_below="@+id/button_appIntro"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/button_appIntro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Hello IG!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_marginTop="83dp"
+        android:text="Setup a player" />
 
 </RelativeLayout>
