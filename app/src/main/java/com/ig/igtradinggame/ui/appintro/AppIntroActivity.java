@@ -14,8 +14,14 @@ public class AppIntroActivity extends AppIntro2 {
         addSlide(NetworkConnectionSlide.newInstance(R.layout.network_connection_slide));
         addSlide(CreateUserSlide.newInstance(R.layout.create_user_slide));
 
-        //skipButtonEnabled = false;
+        skipButtonEnabled = false;
     }
+
+//    @Override
+//    public void onSkipPressed(Fragment currentFragment) {
+//        super.onSkipPressed(currentFragment);
+//        finish();
+//    }
 
     public void onDonePressed(Fragment currentFragment) {
         setResult(RESULT_OK);
