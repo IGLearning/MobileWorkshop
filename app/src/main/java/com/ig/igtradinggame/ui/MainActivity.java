@@ -8,6 +8,7 @@ import android.util.Log;
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
+import com.ig.igtradinggame.ui.appintro.AppIntroActivity;
 
 import butterknife.OnClick;
 
@@ -29,7 +30,7 @@ public class MainActivity extends BaseActivity {
 
     @OnClick(R.id.button_appIntro)
     public void onAppIntroClicked() {
-        startActivityForResult(new Intent(this, IntroActivity.class), APP_INTRO_RESULT);
+        startActivityForResult(new Intent(this, AppIntroActivity.class), APP_INTRO_RESULT);
     }
 
     @Override

@@ -1,10 +1,10 @@
-package com.ig.igtradinggame.network.client;
+package com.ig.igtradinggame.models;
 
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CreateClientResponse {
+public class ClientModel {
     @SerializedName("id")
     @Expose
     private String clientId;
@@ -17,7 +17,7 @@ public class CreateClientResponse {
     @Expose
     private int funds;
 
-    public CreateClientResponse(String clientId, String userName, Integer funds) {
+    public ClientModel(String clientId, String userName, Integer funds) {
         this.clientId = clientId;
         this.userName = userName;
         this.funds = funds;

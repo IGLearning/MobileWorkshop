@@ -1,10 +1,10 @@
-package com.ig.igtradinggame.network.market;
+package com.ig.igtradinggame.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 
-public class PriceSnapshot {
+public class PriceModel {
     @SerializedName("marketId")
     @Expose
     private String marketId;

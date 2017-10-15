@@ -1,4 +1,4 @@
-package com.ig.igtradinggame.network.client;
+package com.ig.igtradinggame.network.requests;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

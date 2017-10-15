@@ -1,4 +1,4 @@
-package com.ig.igtradinggame.ui;
+package com.ig.igtradinggame.ui.appintro;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,10 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ig.igtradinggame.R;
-import com.ig.igtradinggame.network.APIService;
-import com.ig.igtradinggame.network.APIServiceInterface;
-import com.ig.igtradinggame.network.BuildConfig;
-import com.ig.igtradinggame.network.market.Market;
+import com.ig.igtradinggame.network.IGAPIService;
+import com.ig.igtradinggame.network.NetworkConfig;
+import com.ig.igtradinggame.models.MarketModel;
 
 import java.util.List;
 
@@ -23,7 +22,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class SampleSlide extends Fragment {
+public class NetworkConnectionSlide extends Fragment {
     private static final String TAG = "AppIntroFragment1";
     private static final String ARG_LAYOUT_RES_ID = "layoutResId";
 
@@ -36,13 +35,13 @@ public class SampleSlide extends Fragment {
     private Unbinder unbinder;
     private int layoutResId;
 
-    public static SampleSlide newInstance(int layoutResId) {
-        SampleSlide sampleSlide = new SampleSlide();
+    public static NetworkConnectionSlide newInstance(int layoutResId) {
+        NetworkConnectionSlide networkConnectionSlide = new NetworkConnectionSlide();
 
         Bundle args = new Bundle();
         args.putInt(ARG_LAYOUT_RES_ID, layoutResId);
-        sampleSlide.setArguments(args);
-        return sampleSlide;
+        networkConnectionSlide.setArguments(args);
+        return networkConnectionSlide;
     }
 
     @Override
@@ -62,7 +61,7 @@ public class SampleSlide extends Fragment {
         unbinder = ButterKnife.bind(this, view);
 
 
-        baseApiAddress.setText(BuildConfig.API_BASE_URL);
+        baseApiAddress.setText(NetworkConfig.API_BASE_URL);
         connectionSuccessfulText.setVisibility(View.INVISIBLE);
 
         return view;
@@ -82,10 +81,10 @@ public class SampleSlide extends Fragment {
 
     @OnClick(R.id.button_testConnection)
     public void onTestConnectionTapped() {
-        APIServiceInterface apiService = new APIService();
-        apiService.getMarkets(new APIService.OnMarketsLoadedCompleteListener() {
+        IGAPIService apiService = new IGAPIService();
+        apiService.getMarkets(new IGAPIService.OnMarketsLoadedCompleteListener() {
             @Override
-            public void onComplete(List<Market> marketList) {
+            public void onComplete(List<MarketModel> marketList) {
                 connectionSuccessfulText.setVisibility(View.VISIBLE);
             }
         });

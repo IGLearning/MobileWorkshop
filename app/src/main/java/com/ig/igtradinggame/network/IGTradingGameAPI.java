@@ -1,9 +1,9 @@
 package com.ig.igtradinggame.network;
 
-import com.ig.igtradinggame.network.client.CreateClientRequest;
-import com.ig.igtradinggame.network.client.CreateClientResponse;
-import com.ig.igtradinggame.network.market.Market;
-import com.ig.igtradinggame.network.market.PriceSnapshot;
+import com.ig.igtradinggame.network.requests.CreateClientRequest;
+import com.ig.igtradinggame.models.ClientModel;
+import com.ig.igtradinggame.models.MarketModel;
+import com.ig.igtradinggame.models.PriceModel;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 
-public interface IGTradingGameAPI {
+interface IGTradingGameAPI {
     // CLIENT CONTROLLER: Operations relating to the client
     @POST("/workshop/client/createClient")
-    Call<CreateClientResponse> createClient(@Body CreateClientRequest createClientRequest);
+    Call<ClientModel> createClient(@Body CreateClientRequest createClientRequest);
 
     @GET("/workshop/client/funds/{clientId}")
     Observable<Integer> getAvailableFunds(@Path("clientId") String clientId);
@@ -28,11 +28,11 @@ public interface IGTradingGameAPI {
 
     // MARKET DATA CONTROLLER: Operations relating to market data
     @GET("/workshop/marketData/allMarkets")
-    Call<List<Market>> getAllMarkets();
+    Call<List<MarketModel>> getAllMarkets();
 
     @GET("/workshop/marketData/allMarkets")
-    Observable<List<Market>> getAllMarketsObservable();
+    Observable<List<MarketModel>> getAllMarketsObservable();
 
     @GET("/workshop/marketData/allPrices")
-    Call<List<PriceSnapshot>> getAllPrices();
+    Call<List<PriceModel>> getAllPrices();
 }

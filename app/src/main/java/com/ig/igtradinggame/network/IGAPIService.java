@@ -5,9 +5,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.ig.igtradinggame.network.client.CreateClientRequest;
-import com.ig.igtradinggame.network.client.CreateClientResponse;
-import com.ig.igtradinggame.network.market.Market;
+import com.ig.igtradinggame.models.ClientModel;
+import com.ig.igtradinggame.models.MarketModel;
+import com.ig.igtradinggame.network.requests.CreateClientRequest;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -26,10 +26,10 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class APIService implements APIServiceInterface {
+public final class IGAPIService {
     private IGTradingGameAPI igTradingGameAPI;
 
-    public APIService() {
+    public IGAPIService() {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -39,7 +39,7 @@ public class APIService implements APIServiceInterface {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BuildConfig.API_BASE_URL)
+                .baseUrl(NetworkConfig.API_BASE_URL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)
@@ -48,11 +48,10 @@ public class APIService implements APIServiceInterface {
         this.igTradingGameAPI = retrofit.create(IGTradingGameAPI.class);
     }
 
-    @Override
     public void getMarkets(final OnMarketsLoadedCompleteListener listener) {
-        igTradingGameAPI.getAllMarkets().enqueue(new Callback<List<Market>>() {
+        igTradingGameAPI.getAllMarkets().enqueue(new Callback<List<MarketModel>>() {
             @Override
-            public void onResponse(Call<List<Market>> call, Response<List<Market>> response) {
+            public void onResponse(Call<List<MarketModel>> call, Response<List<MarketModel>> response) {
                 if (response.isSuccessful()) {
                     listener.onComplete(response.body());
                 } else {
@@ -61,19 +60,18 @@ public class APIService implements APIServiceInterface {
             }
 
             @Override
-            public void onFailure(Call<List<Market>> call, Throwable t) {
+            public void onFailure(Call<List<MarketModel>> call, Throwable t) {
                 Log.e("CREATE CLIENT", "onFailure: " + t.getMessage());
             }
         });
     }
 
-    @Override
     public void createClient(String username, final OnCreateClientCompleteListener onCompleteListener) {
         final CreateClientRequest request = new CreateClientRequest(username);
 
-        igTradingGameAPI.createClient(request).enqueue(new Callback<CreateClientResponse>() {
+        igTradingGameAPI.createClient(request).enqueue(new Callback<ClientModel>() {
             @Override
-            public void onResponse(@NonNull Call<CreateClientResponse> call, @NonNull Response<CreateClientResponse> response) {
+            public void onResponse(@NonNull Call<ClientModel> call, @NonNull Response<ClientModel> response) {
                 if (response.isSuccessful()) {
                     onCompleteListener.onComplete(response.body());
                 } else {
@@ -82,14 +80,13 @@ public class APIService implements APIServiceInterface {
             }
 
             @Override
-            public void onFailure(Call<CreateClientResponse> call, Throwable t) {
+            public void onFailure(Call<ClientModel> call, Throwable t) {
                 Log.e("CREATE CLIENT", "onFailure: " + t.getMessage());
                 t.printStackTrace();
             }
         });
     }
 
-    @Override
     public Observable<Integer> getFundsForClient(final String clientId, int updateFrequencyMillis) {
         return Observable
                 .interval(updateFrequencyMillis, TimeUnit.MILLISECONDS, Schedulers.io())
@@ -113,12 +110,12 @@ public class APIService implements APIServiceInterface {
         igTradingGameAPI.getAvailableFundsSync(clientID).enqueue(callback);
     }
 
-    public Observable<List<Market>> getTickingMarketList(final int updateFrequencyMillis) {
+    public Observable<List<MarketModel>> getTickingMarketList(final int updateFrequencyMillis) {
         return Observable
                 .interval(updateFrequencyMillis, TimeUnit.MILLISECONDS)
-                .flatMap(new Function<Long, ObservableSource<List<Market>>>() {
+                .flatMap(new Function<Long, ObservableSource<List<MarketModel>>>() {
                     @Override
-                    public ObservableSource<List<Market>> apply(@io.reactivex.annotations.NonNull Long aLong) throws Exception {
+                    public ObservableSource<List<MarketModel>> apply(@io.reactivex.annotations.NonNull Long aLong) throws Exception {
                         return igTradingGameAPI.getAllMarketsObservable();
                     }
                 })
@@ -133,10 +130,10 @@ public class APIService implements APIServiceInterface {
     }
 
     public interface OnCreateClientCompleteListener {
-        void onComplete(CreateClientResponse response);
+        void onComplete(ClientModel response);
     }
 
     public interface OnMarketsLoadedCompleteListener {
-        void onComplete(List<Market> marketList);
+        void onComplete(List<MarketModel> marketList);
     }
 }
