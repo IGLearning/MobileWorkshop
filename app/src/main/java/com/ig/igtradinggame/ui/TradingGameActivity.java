@@ -7,9 +7,8 @@ import android.support.annotation.NonNull;
 import android.widget.TextView;
 
 import com.ig.igtradinggame.R;
-import com.ig.igtradinggame.network.APIService;
-import com.ig.igtradinggame.network.APIServiceInterface;
-import com.ig.igtradinggame.network.market.Market;
+import com.ig.igtradinggame.network.IGAPIService;
+import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 
@@ -39,7 +38,7 @@ public class TradingGameActivity extends BaseActivity {
     TextView openPositionsText;
 
     private String clientID;
-    private APIServiceInterface apiService;
+    private IGAPIService apiService;
 
 
     @Override
@@ -47,7 +46,7 @@ public class TradingGameActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trading_game);
 
-        apiService = new APIService();
+        apiService = new IGAPIService();
         setAllTextViewsToText("Activity started. Loading....");
         final ClientIDStorage clientIDStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(this));
         clientID = clientIDStorage.loadClientId();
@@ -84,22 +83,22 @@ public class TradingGameActivity extends BaseActivity {
     private void loadMarkets() {
         apiService.getTickingMarketList(HEARTBEAT_FREQUENCY_MILLIS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<List<Market>>() {
+                .subscribe(new Observer<List<MarketModel>>() {
                     @Override
                     public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(@io.reactivex.annotations.NonNull List<Market> markets) {
+                    public void onNext(@io.reactivex.annotations.NonNull List<MarketModel> markets) {
                         StringBuilder builder = new StringBuilder();
 
-                        for (Market market : markets) {
-                            builder.append(market.getMarketName());
+                        for (MarketModel marketModel : markets) {
+                            builder.append(marketModel.getMarketName());
                             builder.append("\t\t\t");
-                            builder.append(market.getMarketId());
+                            builder.append(marketModel.getMarketId());
                             builder.append("\t\t\t");
-                            builder.append(market.getCurrentPrice());
+                            builder.append(marketModel.getCurrentPrice());
                             builder.append("\t\t\t");
                             builder.append("\n\n");
                         }

@@ -1,4 +1,4 @@
-package com.ig.igtradinggame.ui;
+package com.ig.igtradinggame.ui.appintro;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ig.igtradinggame.R;
-import com.ig.igtradinggame.network.APIService;
-import com.ig.igtradinggame.network.client.CreateClientResponse;
+import com.ig.igtradinggame.network.IGAPIService;
+import com.ig.igtradinggame.models.ClientModel;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 
@@ -94,7 +94,7 @@ public class CreateUserSlide extends Fragment {
         } else {
             clientFoundStatsText.setVisibility(View.VISIBLE);
 
-            APIService apiService = new APIService();
+            IGAPIService apiService = new IGAPIService();
             apiService.getFundsForClient(clientId, new Callback<Integer>() {
                 @Override
                 public void onResponse(Call<Integer> call, Response<Integer> response) {
@@ -136,10 +136,10 @@ public class CreateUserSlide extends Fragment {
             return;
         }
 
-        APIService apiService = new APIService();
-        apiService.createClient(playerName, new APIService.OnCreateClientCompleteListener() {
+        IGAPIService apiService = new IGAPIService();
+        apiService.createClient(playerName, new IGAPIService.OnCreateClientCompleteListener() {
             @Override
-            public void onComplete(CreateClientResponse response) {
+            public void onComplete(ClientModel response) {
                 successStatsText.setVisibility(View.VISIBLE);
 
                 successStatsText.setText("Success!" +

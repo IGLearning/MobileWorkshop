@@ -1,9 +1,9 @@
-package com.ig.igtradinggame.network.market;
+package com.ig.igtradinggame.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Market {
+public class MarketModel {
     @SerializedName("id")
     @Expose
     private String marketId;
@@ -30,7 +30,7 @@ public class Market {
 
     @Override
     public String toString() {
-        return "Market{" +
+        return "MarketModel{" +
                 "marketId='" + marketId + '\'' +
                 ", marketName='" + marketName + '\'' +
                 ", currentPrice=" + currentPrice +
