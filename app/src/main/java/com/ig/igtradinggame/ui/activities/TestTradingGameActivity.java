@@ -1,4 +1,4 @@
-package com.ig.igtradinggame.ui;
+package com.ig.igtradinggame.ui.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;

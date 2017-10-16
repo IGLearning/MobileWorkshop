@@ -1,4 +1,4 @@
-package com.ig.igtradinggame.ui;
+package com.ig.igtradinggame.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

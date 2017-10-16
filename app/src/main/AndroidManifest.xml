@@ -11,17 +11,17 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity">
+        <activity android:name=".ui.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.TestTradingGameActivity" />
+        <activity android:name=".ui.activities.TestTradingGameActivity" />
         <activity android:name=".ui.appintro.AppIntroActivity" />
         <activity
-            android:name=".ui.TradingGameActivity"
+            android:name=".ui.activities.TradingGameActivity"
             android:label="@string/title_activity_trading_game"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
