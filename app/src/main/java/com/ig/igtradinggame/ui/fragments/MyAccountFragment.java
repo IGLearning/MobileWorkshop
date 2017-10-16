@@ -2,31 +2,44 @@ package com.ig.igtradinggame.ui.fragments;
 
 
 import android.os.Bundle;
-import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ig.igtradinggame.R;
-import com.ig.igtradinggame.ui.cards.CardListAdapter;
+import com.ig.igtradinggame.network.IGAPIService;
+import com.ig.igtradinggame.storage.ClientIDStorage;
+import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 import com.ig.igtradinggame.ui.cards.CardViewModel;
 import com.ig.igtradinggame.ui.cards.balance.BalanceCardViewModel;
 
 import java.util.ArrayList;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
 
 
 public final class MyAccountFragment extends BaseFragment {
+    private static final int HEARTBEAT_FREQUENCY_MILLIS = 500;
+
     @BindView(R.id.recycerview_my_account)
     RecyclerView accountRecyclerView;
 
     private ArrayList<CardViewModel> cardViewModelList;
     private CardListAdapter adapter;
+    private IGAPIService apiService;
+    private String clientID;
+    private ClientIDStorage clientIDStorage;
+    private boolean shouldUpdatePrices = true;
 
     public MyAccountFragment() {
         cardViewModelList = new ArrayList<>();
@@ -36,9 +49,18 @@ public final class MyAccountFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_account, container, false);
         unbinder = ButterKnife.bind(this, view);
+        apiService = new IGAPIService();
+        clientIDStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
+        clientID = clientIDStorage.loadClientId();
         setupRecyclerView();
         setupCards();
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        shouldUpdatePrices = false;
+        super.onDestroyView();
     }
 
     private void setupRecyclerView() {
@@ -52,18 +74,49 @@ public final class MyAccountFragment extends BaseFragment {
         }
 
         accountRecyclerView.setLayoutManager(linearLayoutManager);
+
+        // Turn off blinking when updating
+        RecyclerView.ItemAnimator animator = accountRecyclerView.getItemAnimator();
+        if (animator instanceof SimpleItemAnimator) {
+            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+        }
     }
 
     private void setupCards() {
         cardViewModelList.add(new BalanceCardViewModel(50));
         adapter.notifyDataSetChanged();
 
-        (new Handler()).postDelayed(new TimerTask() {
-            @Override
-            public void run() {
-                cardViewModelList.set(0, new BalanceCardViewModel(100));
-                adapter.notifyItemChanged(0);
-            }
-        }, 5000);
+        startUpdatingBalance(0);
+    }
+
+    private void startUpdatingBalance(final int cardPosition) {
+        apiService.getFundsForClient(clientID, HEARTBEAT_FREQUENCY_MILLIS)
+                .takeWhile(new AppendOnlyLinkedArrayList.NonThrowingPredicate<Integer>() {
+                    @Override
+                    public boolean test(Integer integer) {
+                        return shouldUpdatePrices;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(@NonNull Integer integer) {
+                        BalanceCardViewModel model = new BalanceCardViewModel(integer);
+                        cardViewModelList.set(cardPosition, model);
+                        adapter.notifyItemChanged(cardPosition);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                });
     }
 }
