@@ -1,8 +1,9 @@
-package com.ig.igtradinggame.ui.cards;
+package com.ig.igtradinggame.ui.fragments;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.ig.igtradinggame.ui.cards.CardViewModel;
 import com.ig.igtradinggame.ui.cards.balance.BalanceCard;
 import com.ig.igtradinggame.ui.cards.balance.BalanceCardViewModel;
 import com.ig.igtradinggame.ui.cards.balance.BaseCardView;

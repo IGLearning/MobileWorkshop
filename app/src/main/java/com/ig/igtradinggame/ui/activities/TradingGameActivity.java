@@ -21,8 +21,7 @@ import com.ig.igtradinggame.ui.fragments.OpenPositionFragment;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public final class TradingGameActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public final class TradingGameActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
