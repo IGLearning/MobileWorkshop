@@ -1,4 +1,4 @@
-package com.ig.igtradinggame.ui;
+package com.ig.igtradinggame.ui.activities;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;

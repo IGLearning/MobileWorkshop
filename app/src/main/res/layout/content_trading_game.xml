@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.ig.igtradinggame.ui.TradingGameActivity"
+    tools:context="com.ig.igtradinggame.ui.activities.TradingGameActivity"
     tools:showIn="@layout/app_bar_trading_game">
 
     <FrameLayout
