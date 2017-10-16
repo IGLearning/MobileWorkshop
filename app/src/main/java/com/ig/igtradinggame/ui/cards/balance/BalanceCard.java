@@ -16,22 +16,22 @@ public final class BalanceCard extends BaseCardView implements CardView {
     @BindView(R.id.textView_balance)
     TextView balanceText;
 
-    private BalanceCardViewModel viewModel;
-
     public BalanceCard(View itemView) {
         super(itemView);
-    }
-
-    @Override
-    public void setup(CardViewModel cardViewModel) {
-        if (cardViewModel.getType() == BalanceCardViewModel.TYPE_ID) {
-            viewModel = (BalanceCardViewModel) cardViewModel;
-        }
     }
 
     public static BalanceCard newInstance(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cardview_balance, parent, false);
         return new BalanceCard(view);
+    }
+
+    @Override
+    public void setup(CardViewModel cardViewModel) {
+        if (cardViewModel.getType() == BalanceCardViewModel.TYPE_ID) {
+            BalanceCardViewModel viewModel = (BalanceCardViewModel) cardViewModel;
+            Integer balance = viewModel.getBalance();
+            balanceText.setText(balance.toString());
+        }
     }
 }
