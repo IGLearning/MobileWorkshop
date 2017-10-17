@@ -108,8 +108,7 @@ public class CreateUserSlide extends Fragment {
 
                 @Override
                 public void onFailure(@android.support.annotation.NonNull Call<Integer> call, @android.support.annotation.NonNull Throwable t) {
-                    t.printStackTrace();
-                    successText.setText("There were issues connecting to the server: " + t.getMessage());
+                    //t.printStackTrace(); //FIXME: What should be done on error here?
                 }
             });
         }

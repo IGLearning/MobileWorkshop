@@ -1,10 +1,7 @@
-package com.ig.igtradinggame.ui.cards.balance;
+package com.ig.igtradinggame.ui.cards;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-
-import com.ig.igtradinggame.ui.cards.CardView;
-import com.ig.igtradinggame.ui.cards.CardViewModel;
 
 import butterknife.ButterKnife;
 
@@ -14,5 +11,5 @@ public abstract class BaseCardView extends RecyclerView.ViewHolder implements Ca
         ButterKnife.bind(this, itemView);
     }
 
-    public abstract void setup(CardViewModel cardView);
+    public abstract void setup(CardModel cardView);
 }
