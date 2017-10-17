@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ig.igtradinggame.R;
-import com.ig.igtradinggame.network.IGAPIService;
 import com.ig.igtradinggame.models.ClientModel;
+import com.ig.igtradinggame.network.IGAPIService;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 
@@ -26,7 +26,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CreateUserSlide extends Fragment {
-    private static final String TAG = "CreateUserSlide";
     private static final String ARG_LAYOUT_RES_ID = "layoutResId";
 
     @BindView(R.id.textView_success)
@@ -141,15 +140,16 @@ public class CreateUserSlide extends Fragment {
             @Override
             public void onComplete(ClientModel response) {
                 successStatsText.setVisibility(View.VISIBLE);
-
-                successStatsText.setText("Success!" +
-                        "\n" + "Username: " + response.getUserName() +
-                        "\n" + "Funds: " + response.getFunds() +
-                        "\n" + "ID: " + response.getClientId()
-                );
+                successStatsText.setText(response.toString());
 
                 ClientIDStorage storage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
-                storage.saveClientID(response.getClientId());
+                storage.saveClientID(response.getId());
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                successStatsText.setVisibility(View.VISIBLE);
+                successStatsText.setText(errorMessage);
             }
         });
     }
