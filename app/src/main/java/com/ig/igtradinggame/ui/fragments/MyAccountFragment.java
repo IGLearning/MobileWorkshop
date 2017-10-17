@@ -93,22 +93,22 @@ public final class MyAccountFragment extends BaseFragment {
     }
 
     private void startUpdatingBalance(final int cardPosition) {
-        apiService.getFundsForClient(clientID, HEARTBEAT_FREQUENCY_MILLIS)
-                .takeWhile(new Predicate<Integer>() {
+        apiService.getClientInfoStreaming(clientID, HEARTBEAT_FREQUENCY_MILLIS)
+                .takeWhile(new Predicate<ClientModel>() {
                     @Override
-                    public boolean test(@NonNull Integer integer) throws Exception {
+                    public boolean test(@NonNull ClientModel clientModel) throws Exception {
                         return shouldUpdatePrices;
                     }
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<Integer>() {
+                .subscribe(new Observer<ClientModel>() {
                     @Override
                     public void onSubscribe(@NonNull Disposable d) {
                     }
 
                     @Override
-                    public void onNext(@NonNull Integer integer) {
-                        BalanceModel model = new BalanceModel(integer);
+                    public void onNext(@NonNull ClientModel clientModel) {
+                        BalanceModel model = new BalanceModel(clientModel.getAvailableFunds());
                         cardModelList.set(cardPosition, model);
                         adapter.notifyItemChanged(cardPosition);
                     }
@@ -124,7 +124,7 @@ public final class MyAccountFragment extends BaseFragment {
     }
 
     private void startUpdatingUserDetails(final int cardPosition) {
-        apiService.getClientInfo(clientID, HEARTBEAT_FREQUENCY_MILLIS)
+        apiService.getClientInfoStreaming(clientID, HEARTBEAT_FREQUENCY_MILLIS)
                 .takeWhile(new Predicate<ClientModel>() {
                     @Override
                     public boolean test(@NonNull ClientModel clientModel) throws Exception {
@@ -155,6 +155,5 @@ public final class MyAccountFragment extends BaseFragment {
 
                     }
                 });
-
     }
 }

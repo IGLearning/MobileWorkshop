@@ -38,7 +38,7 @@ public final class TradingGameActivity extends BaseActivity implements Navigatio
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trading_game2);
+        setContentView(R.layout.activity_trading_game);
         setSupportActionBar(toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

@@ -9,13 +9,13 @@ import com.ig.igtradinggame.ui.cards.CardModel;
  */
 public class BalanceModel extends CardModel {
     public static final int TYPE = 1;
-    private final int balance;
+    private double balance;
 
-    public BalanceModel(int balance) {
+    public BalanceModel(double balance) {
         this.balance = balance;
     }
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
