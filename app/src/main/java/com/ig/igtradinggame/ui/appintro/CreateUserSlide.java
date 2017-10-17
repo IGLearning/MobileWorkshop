@@ -21,9 +21,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CreateUserSlide extends Fragment {
     private static final String ARG_LAYOUT_RES_ID = "layoutResId";
@@ -94,21 +91,17 @@ public class CreateUserSlide extends Fragment {
             clientFoundStatsText.setVisibility(View.VISIBLE);
 
             IGAPIService apiService = new IGAPIService();
-            apiService.getFundsForClient(clientId, new Callback<Integer>() {
+
+            apiService.getClientInfo(clientId, new IGAPIService.OnClientLoadedListener() {
                 @Override
-                public void onResponse(Call<Integer> call, Response<Integer> response) {
-                    if (response.isSuccessful()) {
-                        final Integer clientFunds = response.body();
-                        clientFoundStatsText.setText("Found an existing client!\nID: " + clientId + "\nFunds: " + clientFunds + "\n\nHit the tick below to start!");
-                        createPlayerButton.setText("Discard, and create a new player");
-                    } else {
-                        onClientNotFound();
-                    }
+                public void onComplete(ClientModel response) {
+                    clientFoundStatsText.setText("Found an existing client!\n" + response.toString());
+                    createPlayerButton.setText("Discard, and create a new player");
                 }
 
                 @Override
-                public void onFailure(@android.support.annotation.NonNull Call<Integer> call, @android.support.annotation.NonNull Throwable t) {
-                    //t.printStackTrace(); //FIXME: What should be done on error here?
+                public void onError(String errorMessage) {
+                    onClientNotFound();
                 }
             });
         }
@@ -135,11 +128,11 @@ public class CreateUserSlide extends Fragment {
         }
 
         IGAPIService apiService = new IGAPIService();
-        apiService.createClient(playerName, new IGAPIService.OnCreateClientCompleteListener() {
+        apiService.createClient(playerName, new IGAPIService.OnClientLoadedListener() {
             @Override
             public void onComplete(ClientModel response) {
                 successStatsText.setVisibility(View.VISIBLE);
-                successStatsText.setText(response.toString());
+                successStatsText.setText("Success!\n" + response.toString());
 
                 ClientIDStorage storage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
                 storage.saveClientID(response.getId());

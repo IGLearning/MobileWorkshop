@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -31,6 +32,9 @@ public class NetworkConnectionSlide extends Fragment {
 
     @BindView(R.id.textView_connectionSuccessful)
     TextView connectionSuccessfulText;
+
+    @BindView(R.id.button_testConnection)
+    Button testConnectionButton;
 
     private Unbinder unbinder;
     private int layoutResId;
@@ -81,11 +85,21 @@ public class NetworkConnectionSlide extends Fragment {
 
     @OnClick(R.id.button_testConnection)
     public void onTestConnectionTapped() {
+        testConnectionButton.setText("Loading...");
         IGAPIService apiService = new IGAPIService();
-        apiService.getMarkets(new IGAPIService.OnMarketsLoadedCompleteListener() {
+        apiService.getAllMarkets(new IGAPIService.OnMarketsLoadedCompleteListener() {
             @Override
             public void onComplete(List<MarketModel> marketList) {
                 connectionSuccessfulText.setVisibility(View.VISIBLE);
+                testConnectionButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                testConnectionButton.setVisibility(View.GONE);
+                connectionSuccessfulText.setVisibility(View.VISIBLE);
+                connectionSuccessfulText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                connectionSuccessfulText.setText("Error: " + errorMessage);
             }
         });
     }

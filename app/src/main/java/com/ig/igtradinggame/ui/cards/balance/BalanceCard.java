@@ -30,7 +30,7 @@ public final class BalanceCard extends BaseCardView {
     public void setup(CardModel cardModel) {
         if (cardModel instanceof BalanceModel) {
             BalanceModel viewModel = (BalanceModel) cardModel;
-            Integer balance = viewModel.getBalance();
+            Double balance = viewModel.getBalance();
             balanceText.setText(balance.toString());
         }
     }

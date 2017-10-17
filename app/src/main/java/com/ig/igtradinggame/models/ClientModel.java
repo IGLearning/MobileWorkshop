@@ -46,9 +46,9 @@ public class ClientModel {
 
     @Override
     public String toString() {
-        return "userName='" + userName + '\'' +
-                ", availableFunds=" + availableFunds +
-                ", runningProfitAndLoss=" + runningProfitAndLoss +
-                ", id='" + id + '\'';
+        return "userName:" + userName +
+                "\navailableFunds:" + availableFunds +
+                "\nrunningProfitAndLoss:" + runningProfitAndLoss +
+                "\nid:" + id;
     }
 }
