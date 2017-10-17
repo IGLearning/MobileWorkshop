@@ -25,7 +25,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.internal.util.AppendOnlyLinkedArrayList;
+import io.reactivex.functions.Predicate;
 
 
 public final class MyAccountFragment extends BaseFragment {
@@ -84,16 +84,15 @@ public final class MyAccountFragment extends BaseFragment {
 
     private void setupCards() {
         cardViewModelList.add(new BalanceCardViewModel(50));
-        adapter.notifyDataSetChanged();
 
         startUpdatingBalance(0);
     }
 
     private void startUpdatingBalance(final int cardPosition) {
         apiService.getFundsForClient(clientID, HEARTBEAT_FREQUENCY_MILLIS)
-                .takeWhile(new AppendOnlyLinkedArrayList.NonThrowingPredicate<Integer>() {
+                .takeWhile(new Predicate<Integer>() {
                     @Override
-                    public boolean test(Integer integer) {
+                    public boolean test(@NonNull Integer integer) throws Exception {
                         return shouldUpdatePrices;
                     }
                 })

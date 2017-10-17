@@ -5,33 +5,50 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ClientModel {
-    @SerializedName("id")
-    @Expose
-    private String clientId;
-
     @SerializedName("userName")
     @Expose
     private String userName;
 
-    @SerializedName("funds")
+    @SerializedName("availableFunds")
     @Expose
-    private int funds;
+    private double availableFunds;
 
-    public ClientModel(String clientId, String userName, Integer funds) {
-        this.clientId = clientId;
+    @SerializedName("runningProfitAndLoss")
+    @Expose
+    private double runningProfitAndLoss;
+
+    @SerializedName("id")
+    @Expose
+    private String id;
+
+    public ClientModel(String userName, double availableFunds, double runningProfitAndLoss, String id) {
         this.userName = userName;
-        this.funds = funds;
-    }
-
-    public String getClientId() {
-        return clientId;
+        this.availableFunds = availableFunds;
+        this.runningProfitAndLoss = runningProfitAndLoss;
+        this.id = id;
     }
 
     public String getUserName() {
         return userName;
     }
 
-    public int getFunds() {
-        return funds;
+    public double getAvailableFunds() {
+        return availableFunds;
+    }
+
+    public double getRunningProfitAndLoss() {
+        return runningProfitAndLoss;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "userName='" + userName + '\'' +
+                ", availableFunds=" + availableFunds +
+                ", runningProfitAndLoss=" + runningProfitAndLoss +
+                ", id='" + id + '\'';
     }
 }

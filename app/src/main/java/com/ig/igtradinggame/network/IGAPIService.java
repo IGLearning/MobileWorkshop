@@ -9,6 +9,7 @@ import com.ig.igtradinggame.models.ClientModel;
 import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.network.requests.CreateClientRequest;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -75,7 +76,11 @@ public final class IGAPIService {
                 if (response.isSuccessful()) {
                     onCompleteListener.onComplete(response.body());
                 } else {
-                    Log.d("QuestionsCallback", "Code: " + response.code() + " Message: " + response.message());  // TODO: FIX LOGGING CHAOS
+                    try {
+                        onCompleteListener.onError(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -131,6 +136,7 @@ public final class IGAPIService {
 
     public interface OnCreateClientCompleteListener {
         void onComplete(ClientModel response);
+        void onError(String errorMessage);
     }
 
     public interface OnMarketsLoadedCompleteListener {
