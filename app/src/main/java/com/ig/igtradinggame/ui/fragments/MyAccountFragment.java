@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ig.igtradinggame.R;
+import com.ig.igtradinggame.models.ClientModel;
 import com.ig.igtradinggame.network.IGAPIService;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
-import com.ig.igtradinggame.ui.cards.CardViewModel;
-import com.ig.igtradinggame.ui.cards.balance.BalanceCardViewModel;
+import com.ig.igtradinggame.ui.cards.CardModel;
+import com.ig.igtradinggame.ui.cards.balance.BalanceModel;
+import com.ig.igtradinggame.ui.cards.userdetails.UserDetailsModel;
 
 import java.util.ArrayList;
 
@@ -34,7 +36,7 @@ public final class MyAccountFragment extends BaseFragment {
     @BindView(R.id.recycerview_my_account)
     RecyclerView accountRecyclerView;
 
-    private ArrayList<CardViewModel> cardViewModelList;
+    private ArrayList<CardModel> cardModelList;
     private CardListAdapter adapter;
     private IGAPIService apiService;
     private String clientID;
@@ -42,7 +44,7 @@ public final class MyAccountFragment extends BaseFragment {
     private boolean shouldUpdatePrices = true;
 
     public MyAccountFragment() {
-        cardViewModelList = new ArrayList<>();
+        cardModelList = new ArrayList<>();
     }
 
     @Override
@@ -69,7 +71,7 @@ public final class MyAccountFragment extends BaseFragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         if (accountRecyclerView != null) {
-            adapter = new CardListAdapter(cardViewModelList);
+            adapter = new CardListAdapter(cardModelList);
             accountRecyclerView.setAdapter(adapter);
         }
 
@@ -83,9 +85,11 @@ public final class MyAccountFragment extends BaseFragment {
     }
 
     private void setupCards() {
-        cardViewModelList.add(new BalanceCardViewModel(50));
-
+        cardModelList.add(new BalanceModel(0));
         startUpdatingBalance(0);
+
+        cardModelList.add(new UserDetailsModel(null));
+        startUpdatingUserDetails(1);
     }
 
     private void startUpdatingBalance(final int cardPosition) {
@@ -104,8 +108,8 @@ public final class MyAccountFragment extends BaseFragment {
 
                     @Override
                     public void onNext(@NonNull Integer integer) {
-                        BalanceCardViewModel model = new BalanceCardViewModel(integer);
-                        cardViewModelList.set(cardPosition, model);
+                        BalanceModel model = new BalanceModel(integer);
+                        cardModelList.set(cardPosition, model);
                         adapter.notifyItemChanged(cardPosition);
                     }
 
@@ -117,5 +121,40 @@ public final class MyAccountFragment extends BaseFragment {
                     public void onComplete() {
                     }
                 });
+    }
+
+    private void startUpdatingUserDetails(final int cardPosition) {
+        apiService.getClientInfo(clientID, HEARTBEAT_FREQUENCY_MILLIS)
+                .takeWhile(new Predicate<ClientModel>() {
+                    @Override
+                    public boolean test(@NonNull ClientModel clientModel) throws Exception {
+                        return shouldUpdatePrices;
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ClientModel>() {
+                    @Override
+                    public void onSubscribe(@NonNull Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(@NonNull ClientModel clientModel) {
+                        UserDetailsModel model = new UserDetailsModel(clientModel);
+                        cardModelList.set(cardPosition, model);
+                        adapter.notifyItemChanged(cardPosition);
+                    }
+
+                    @Override
+                    public void onError(@NonNull Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 }

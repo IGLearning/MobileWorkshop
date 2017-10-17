@@ -3,17 +3,19 @@ package com.ig.igtradinggame.ui.fragments;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.ig.igtradinggame.ui.cards.CardViewModel;
+import com.ig.igtradinggame.ui.cards.CardModel;
 import com.ig.igtradinggame.ui.cards.balance.BalanceCard;
-import com.ig.igtradinggame.ui.cards.balance.BalanceCardViewModel;
-import com.ig.igtradinggame.ui.cards.balance.BaseCardView;
+import com.ig.igtradinggame.ui.cards.balance.BalanceModel;
+import com.ig.igtradinggame.ui.cards.BaseCardView;
+import com.ig.igtradinggame.ui.cards.userdetails.UserDetailsCard;
+import com.ig.igtradinggame.ui.cards.userdetails.UserDetailsModel;
 
 import java.util.ArrayList;
 
 public class CardListAdapter extends RecyclerView.Adapter<BaseCardView> {
-    private ArrayList<CardViewModel> cardViews;
+    private ArrayList<CardModel> cardViews;
 
-    public CardListAdapter(ArrayList<CardViewModel> cardViews) {
+    public CardListAdapter(ArrayList<CardModel> cardViews) {
         this.cardViews = cardViews;
     }
 
@@ -25,8 +27,10 @@ public class CardListAdapter extends RecyclerView.Adapter<BaseCardView> {
     @Override
     public BaseCardView onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case BalanceCardViewModel.TYPE_ID:
+            case BalanceModel.TYPE:
                 return BalanceCard.newInstance(parent);
+            case UserDetailsModel.TYPE:
+                return UserDetailsCard.newInstance(parent);
         }
 
         return null;

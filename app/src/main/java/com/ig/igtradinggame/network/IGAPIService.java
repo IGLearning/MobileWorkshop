@@ -101,11 +101,16 @@ public final class IGAPIService {
                         return igTradingGameAPI.getAvailableFunds(clientId);
                     }
                 })
-                .doOnError(new Consumer<Throwable>() {
+                .retry();
+    }
+
+    public Observable<ClientModel> getClientInfo(final String clientId, int updateFrequencyMillis) {
+        return Observable
+                .interval(updateFrequencyMillis, TimeUnit.MILLISECONDS, Schedulers.io())
+                .flatMap(new Function<Long, ObservableSource<ClientModel>>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        //TODO: Log the error
-                        throwable.printStackTrace();
+                    public ObservableSource<ClientModel> apply(@io.reactivex.annotations.NonNull Long aLong) throws Exception {
+                        return igTradingGameAPI.getClientInfo(clientId);
                     }
                 })
                 .retry();

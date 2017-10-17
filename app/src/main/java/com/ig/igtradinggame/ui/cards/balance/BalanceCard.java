@@ -6,17 +6,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ig.igtradinggame.R;
-import com.ig.igtradinggame.ui.cards.CardView;
-import com.ig.igtradinggame.ui.cards.CardViewModel;
+import com.ig.igtradinggame.ui.cards.BaseCardView;
+import com.ig.igtradinggame.ui.cards.CardModel;
 
 import butterknife.BindView;
 
 
-public final class BalanceCard extends BaseCardView implements CardView {
+public final class BalanceCard extends BaseCardView {
     @BindView(R.id.textView_balance)
     TextView balanceText;
 
-    public BalanceCard(View itemView) {
+    private BalanceCard(View itemView) {
         super(itemView);
     }
 
@@ -27,9 +27,9 @@ public final class BalanceCard extends BaseCardView implements CardView {
     }
 
     @Override
-    public void setup(CardViewModel cardViewModel) {
-        if (cardViewModel.getType() == BalanceCardViewModel.TYPE_ID) {
-            BalanceCardViewModel viewModel = (BalanceCardViewModel) cardViewModel;
+    public void setup(CardModel cardModel) {
+        if (cardModel instanceof BalanceModel) {
+            BalanceModel viewModel = (BalanceModel) cardModel;
             Integer balance = viewModel.getBalance();
             balanceText.setText(balance.toString());
         }

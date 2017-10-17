@@ -20,6 +20,9 @@ interface IGTradingGameAPI {
     @POST("/workshop/client/createClient")
     Call<ClientModel> createClient(@Body CreateClientRequest createClientRequest);
 
+    @GET("/workshop/client/{clientId}")
+    Observable<ClientModel> getClientInfo(@Path("clientId") String clientId);
+
     @GET("/workshop/client/funds/{clientId}")
     Observable<Integer> getAvailableFunds(@Path("clientId") String clientId);
 
