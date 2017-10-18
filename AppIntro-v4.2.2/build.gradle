@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('AppIntro-v4.2.2.aar'))
