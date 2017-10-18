@@ -108,8 +108,10 @@ public class CreateUserSlide extends Fragment {
     }
 
     private void onClientNotFound() {
-        clientFoundStatsText.setText("Could not find a player on this device.\nCreate a new player below!");
-        onClickCreatePlayer();
+        if (clientFoundStatsText != null) {
+            clientFoundStatsText.setText("Could not find a player on this device.\nCreate a new player below!");
+            onClickCreatePlayer();
+        }
     }
 
     @OnClick(R.id.button_createPlayer)

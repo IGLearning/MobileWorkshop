@@ -7,6 +7,8 @@ import com.ig.igtradinggame.ui.cards.CardModel;
 import com.ig.igtradinggame.ui.cards.balance.BalanceCard;
 import com.ig.igtradinggame.ui.cards.balance.BalanceModel;
 import com.ig.igtradinggame.ui.cards.BaseCardView;
+import com.ig.igtradinggame.ui.cards.button.ButtonCard;
+import com.ig.igtradinggame.ui.cards.button.ButtonModel;
 import com.ig.igtradinggame.ui.cards.userdetails.UserDetailsCard;
 import com.ig.igtradinggame.ui.cards.userdetails.UserDetailsModel;
 
@@ -31,6 +33,8 @@ public class CardListAdapter extends RecyclerView.Adapter<BaseCardView> {
                 return BalanceCard.newInstance(parent);
             case UserDetailsModel.TYPE:
                 return UserDetailsCard.newInstance(parent);
+            case ButtonModel.TYPE:
+                return ButtonCard.newInstance(parent);
         }
 
         return null;

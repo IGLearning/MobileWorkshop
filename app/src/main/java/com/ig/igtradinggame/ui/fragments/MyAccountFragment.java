@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 import com.ig.igtradinggame.ui.cards.CardModel;
 import com.ig.igtradinggame.ui.cards.balance.BalanceModel;
+import com.ig.igtradinggame.ui.cards.button.ButtonModel;
 import com.ig.igtradinggame.ui.cards.userdetails.UserDetailsModel;
 
 import java.util.ArrayList;
@@ -90,6 +92,13 @@ public final class MyAccountFragment extends BaseFragment {
 
         cardModelList.add(new UserDetailsModel(null));
         startUpdatingUserDetails(1);
+
+        cardModelList.add(new ButtonModel(new ButtonModel.ButtonClickListener() {
+            @Override
+            public void onButtonClick() {
+                Log.d("DEBUG BUTTON", "Button Tap Recognised. Now do something with it!");
+            }
+        }));
     }
 
     private void startUpdatingBalance(final int cardPosition) {
