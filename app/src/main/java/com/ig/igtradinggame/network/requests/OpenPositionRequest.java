@@ -7,16 +7,13 @@ public class OpenPositionRequest {
     @SerializedName("marketId")
     @Expose
     public String marketId;
-    @SerializedName("openingPrice")
-    @Expose
-    public int openingPrice;
+
     @SerializedName("buySize")
     @Expose
     public int buySize;
 
-    public OpenPositionRequest(String marketId, int openingPrice, int buySize) {
+    public OpenPositionRequest(String marketId, int buySize) {
         this.marketId = marketId;
-        this.openingPrice = openingPrice;
         this.buySize = buySize;
     }
 
@@ -24,9 +21,6 @@ public class OpenPositionRequest {
         return marketId;
     }
 
-    public int getOpeningPrice() {
-        return openingPrice;
-    }
 
     public int getBuySize() {
         return buySize;
