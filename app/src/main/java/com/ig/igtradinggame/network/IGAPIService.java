@@ -229,11 +229,10 @@ public final class IGAPIService {
      * Closes a position.
      * @param clientId
      * @param openPositionId
-     * @param closingPrice // THIS WILL LIKELY CHANGE
      * @param onCompleteListener
      */
-    public void closePosition(String clientId, String openPositionId, String closingPrice, final OnClosePositionCompleteListener onCompleteListener) {
-        igTradingGameAPI.closePosition(clientId, openPositionId, closingPrice).enqueue(new Callback<Integer>() {
+    public void closePosition(String clientId, String openPositionId, final OnClosePositionCompleteListener onCompleteListener) {
+        igTradingGameAPI.closePosition(clientId, openPositionId).enqueue(new Callback<Integer>() {
             @Override
             public void onResponse(Call<Integer> call, Response<Integer> response) {
                 if (response.isSuccessful()) {

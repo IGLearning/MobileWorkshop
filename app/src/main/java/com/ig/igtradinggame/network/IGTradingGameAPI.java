@@ -49,8 +49,7 @@ interface IGTradingGameAPI {
     Call<OpenPositionIdResponse> openPosition(@Path("clientId") String clientId,
                                               @Body OpenPositionRequest openPositionRequest);
 
-    @POST("/workshop/openPositions/{clientId}/{openPositionId}/{closingPrice}")
+    @POST("/workshop/openPositions/{clientId}/{openPositionId}")
     Call<Integer> closePosition(@Path("clientId") String clientId,
-                       @Path("openPositionId") String openPositionId,
-                       @Path("closingPrice") String closingPrice);
+                       @Path("openPositionId") String openPositionId);
 }
