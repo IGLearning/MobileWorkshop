@@ -2,8 +2,11 @@ package com.ig.igtradinggame.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.ig.igtradinggame.ui.cards.CardModel;
 
-public class MarketModel {
+public class MarketModel extends CardModel {
+    public static final int TYPE = 4;
+
     @SerializedName("id")
     @Expose
     private String marketId;
@@ -35,5 +38,10 @@ public class MarketModel {
                 ", marketName='" + marketName + '\'' +
                 ", currentPrice=" + currentPrice +
                 '}';
+    }
+
+    @Override
+    public int getType() {
+        return TYPE;
     }
 }

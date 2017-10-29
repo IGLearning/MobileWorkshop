@@ -28,6 +28,8 @@ public final class BalanceCard extends BaseCardView {
 
     @Override
     public void setup(CardModel cardModel) {
+        super.setup(cardModel);
+
         if (cardModel instanceof BalanceModel) {
             BalanceModel viewModel = (BalanceModel) cardModel;
             Double balance = viewModel.getBalance();

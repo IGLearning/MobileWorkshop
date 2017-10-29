@@ -1,6 +1,7 @@
 package com.ig.igtradinggame.ui.activities;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.ig.igtradinggame.R;
+import com.ig.igtradinggame.ui.fragments.CurrentPositionsFragment;
 import com.ig.igtradinggame.ui.fragments.MyAccountFragment;
 import com.ig.igtradinggame.ui.fragments.OpenPositionFragment;
 
@@ -70,7 +72,7 @@ public final class TradingGameActivity extends BaseActivity implements Navigatio
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
         Fragment fragment = null;
@@ -78,8 +80,10 @@ public final class TradingGameActivity extends BaseActivity implements Navigatio
 
         if (id == R.id.nav_me) {
             fragment = new MyAccountFragment();
-        } else if (id == R.id.nav_openPosition) {
+        } else if (id == R.id.nav_buy) {
             fragment = new OpenPositionFragment();
+        } else if (id == R.id.nav_openPosition) {
+            fragment = new CurrentPositionsFragment();
         }
 
         fragmentManager.beginTransaction()

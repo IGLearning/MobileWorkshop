@@ -53,12 +53,16 @@ public final class MyAccountFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_account, container, false);
         unbinder = ButterKnife.bind(this, view);
+        setup();
+        return view;
+    }
+
+    private void setup() {
         apiService = new IGAPIService();
         clientIDStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
         clientID = clientIDStorage.loadClientId();
         setupRecyclerView();
         setupCards();
-        return view;
     }
 
     @Override
