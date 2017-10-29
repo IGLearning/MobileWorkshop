@@ -1,6 +1,7 @@
 package com.ig.igtradinggame.ui.fragments;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import com.ig.igtradinggame.ui.cards.CardModel;
@@ -36,6 +37,9 @@ public class CardListAdapter extends RecyclerView.Adapter<BaseCardView> {
             case ButtonModel.TYPE:
                 return ButtonCard.newInstance(parent);
         }
+
+        // If you're getting this error, you need to add the card type to the switch statement above!
+        Log.e("UNKNOWN VIEWHOLDER  ", "onCreateViewHolder: UNREGISTERED TYPE: " + viewType);
 
         return null;
     }

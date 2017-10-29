@@ -1,7 +1,5 @@
 package com.ig.igtradinggame.network;
 
-import android.support.annotation.NonNull;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.ig.igtradinggame.models.ClientModel;
@@ -17,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
@@ -28,6 +27,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /**
  * Contains the network calls for the entire MW application.
@@ -43,7 +43,7 @@ public final class IGAPIService {
                 .create();
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        interceptor.setLevel(NetworkConfig.RETROFIT_LOGGING_LEVEL);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -58,7 +58,8 @@ public final class IGAPIService {
 
     /**
      * Creates a client
-     * @param username Player's name. Note, can be rejected by server.
+     *
+     * @param username           Player's name. Note, can be rejected by server.
      * @param onCompleteListener
      */
     public void createClient(String username, final OnClientLoadedListener onCompleteListener) {
@@ -82,6 +83,7 @@ public final class IGAPIService {
 
     /**
      * Retrieves client info
+     *
      * @param clientId
      * @param onCompleteListener
      */
@@ -92,7 +94,7 @@ public final class IGAPIService {
                 if (response.isSuccessful()) {
                     onCompleteListener.onComplete(response.body());
                 } else {
-                     onCompleteListener.onError(unboxError(response.errorBody())); 
+                    onCompleteListener.onError(unboxError(response.errorBody()));
                 }
             }
 
@@ -105,6 +107,7 @@ public final class IGAPIService {
 
     /**
      * Get's a client's details
+     *
      * @param clientId
      * @param updateFrequencyMillis
      * @return Client model observable
@@ -123,6 +126,7 @@ public final class IGAPIService {
 
     /**
      * Retrieves all markets
+     *
      * @param onCompleteListener
      */
     public void getAllMarkets(final OnMarketsLoadedCompleteListener onCompleteListener) {
@@ -132,7 +136,7 @@ public final class IGAPIService {
                 if (response.isSuccessful()) {
                     onCompleteListener.onComplete(response.body());
                 } else {
-                     onCompleteListener.onError(unboxError(response.errorBody())); 
+                    onCompleteListener.onError(unboxError(response.errorBody()));
                 }
             }
 
@@ -145,6 +149,7 @@ public final class IGAPIService {
 
     /**
      * Retrieves all markets
+     *
      * @param updateFrequencyMillis
      * @return Market model observable
      */
@@ -162,6 +167,7 @@ public final class IGAPIService {
 
     /**
      * Retrieves all open positions
+     *
      * @param clientId
      * @param onCompleteListener
      */
@@ -172,7 +178,7 @@ public final class IGAPIService {
                 if (response.isSuccessful()) {
                     onCompleteListener.onComplete(response.body());
                 } else {
-                     onCompleteListener.onError(unboxError(response.errorBody())); 
+                    onCompleteListener.onError(unboxError(response.errorBody()));
                 }
             }
 
@@ -185,11 +191,13 @@ public final class IGAPIService {
 
     /**
      * Streams all open positions
+     *
      * @param clientId
      * @param updateFrequencyMillis
      * @return Open position Model observable
      */
     public Observable<List<OpenPositionModel>> getOpenPositionsStreaming(final String clientId, int updateFrequencyMillis) {
+
         return Observable
                 .interval(updateFrequencyMillis, TimeUnit.MILLISECONDS, Schedulers.io())
                 .flatMap(new Function<Long, ObservableSource<List<OpenPositionModel>>>() {
@@ -203,6 +211,7 @@ public final class IGAPIService {
 
     /**
      * Creates a new position
+     *
      * @param clientId
      * @param openPositionRequest
      * @param onCompleteListener
@@ -214,7 +223,7 @@ public final class IGAPIService {
                 if (response.isSuccessful()) {
                     onCompleteListener.onComplete(response.body());
                 } else {
-                     onCompleteListener.onError(unboxError(response.errorBody())); 
+                    onCompleteListener.onError(unboxError(response.errorBody()));
                 }
             }
 
@@ -227,6 +236,7 @@ public final class IGAPIService {
 
     /**
      * Closes a position.
+     *
      * @param clientId
      * @param openPositionId
      * @param onCompleteListener
@@ -238,7 +248,7 @@ public final class IGAPIService {
                 if (response.isSuccessful()) {
                     onCompleteListener.onComplete();
                 } else {
-                     onCompleteListener.onError(unboxError(response.errorBody())); 
+                    onCompleteListener.onError(unboxError(response.errorBody()));
                 }
             }
 
@@ -249,36 +259,41 @@ public final class IGAPIService {
         });
     }
 
-    public interface OnClientLoadedListener {
-        void onComplete(ClientModel response);
-        void onError(String errorMessage);
-    }
-
-    public interface OnMarketsLoadedCompleteListener {
-        void onComplete(List<MarketModel> marketList);
-        void onError(String errorMessage);
-    }
-
-    public interface OnOpenPositionsLoadedCompleteListener {
-        void onComplete(List<OpenPositionModel> openPositionModels);
-        void onError(String errorMessage);
-    }
-
-    public interface OnOpenPositionCompleteListener {
-        void onComplete(OpenPositionIdResponse openPositionIdResponse);
-        void onError(String errorMessage);
-    }
-
-    public interface OnClosePositionCompleteListener {
-        void onComplete();
-        void onError(String errorMessage);
-    }
-
     private String unboxError(final ResponseBody error) {
         try {
             return error.string();
         } catch (IOException e) {
             return "Unable to decode error.";
         }
+    }
+
+    public interface OnClientLoadedListener {
+        void onComplete(ClientModel response);
+
+        void onError(String errorMessage);
+    }
+
+    public interface OnMarketsLoadedCompleteListener {
+        void onComplete(List<MarketModel> marketList);
+
+        void onError(String errorMessage);
+    }
+
+    public interface OnOpenPositionsLoadedCompleteListener {
+        void onComplete(List<OpenPositionModel> openPositionModels);
+
+        void onError(String errorMessage);
+    }
+
+    public interface OnOpenPositionCompleteListener {
+        void onComplete(OpenPositionIdResponse openPositionIdResponse);
+
+        void onError(String errorMessage);
+    }
+
+    public interface OnClosePositionCompleteListener {
+        void onComplete();
+
+        void onError(String errorMessage);
     }
 }

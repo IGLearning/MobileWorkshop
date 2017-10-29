@@ -1,5 +1,7 @@
 package com.ig.igtradinggame.network;
 
+import okhttp3.logging.HttpLoggingInterceptor;
+
 public final class NetworkConfig {
     /**
      * Note that this is the default localhost address for
@@ -8,4 +10,5 @@ public final class NetworkConfig {
      * be able to connect to the API.
      */
     public static final String API_BASE_URL = "http://10.0.2.2:8085/";
+    public static final HttpLoggingInterceptor.Level RETROFIT_LOGGING_LEVEL = HttpLoggingInterceptor.Level.BODY;
 }

@@ -5,7 +5,7 @@
     tools:context="com.ig.igtradinggame.ui.fragments.OpenPositionFragment">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView_buy"
+        android:id="@+id/recyclerView_current_positions"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

@@ -26,9 +26,10 @@ public class ButtonCard extends BaseCardView {
         return new ButtonCard(view);
     }
 
-
     @Override
     public void setup(CardModel cardModel) {
+        super.setup(cardModel);
+
         if (cardModel.getType() == ButtonModel.TYPE) {
             final ButtonModel buttonModel = (ButtonModel) cardModel;
 

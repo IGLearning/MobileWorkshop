@@ -6,7 +6,10 @@
             android:id="@+id/nav_me"
             android:title="Me" />
         <item
-            android:id="@+id/nav_openPosition"
+            android:id="@+id/nav_buy"
             android:title="Buy" />
+        <item
+            android:id="@+id/nav_openPosition"
+            android:title="Open Positions" />
     </group>
 </menu>
