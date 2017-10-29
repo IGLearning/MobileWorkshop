@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.network.IGAPIService;
+import com.ig.igtradinggame.ui.bottomsheets.OpenPositionBottomsheetFragment;
 import com.ig.igtradinggame.ui.cards.BaseCardView;
 import com.ig.igtradinggame.ui.cards.CardModel;
 
@@ -120,6 +121,9 @@ public class OpenPositionFragment extends BaseFragment implements BaseCardView.O
 
     @Override
     public void onItemClick(CardModel cardModel) {
-        Log.e(TAG, "onItemClick: MORE CLICK");
+        // OPEN THE BOTTOMSHEET
+        Log.e(TAG, "onItemClick: yaeh");
+        OpenPositionBottomsheetFragment bottomsheet = new OpenPositionBottomsheetFragment();
+        bottomsheet.show(getActivity().getSupportFragmentManager(), "Bottomsheet");
     }
 }
