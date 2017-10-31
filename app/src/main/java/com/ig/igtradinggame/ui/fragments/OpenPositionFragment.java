@@ -2,6 +2,7 @@ package com.ig.igtradinggame.ui.fragments;
 
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
@@ -13,8 +14,9 @@ import android.view.ViewGroup;
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.network.IGAPIService;
+import com.ig.igtradinggame.storage.BaseUrlStorage;
+import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 import com.ig.igtradinggame.ui.bottomsheets.OpenPositionBottomsheetFragment;
-import com.ig.igtradinggame.network.NetworkConfig;
 import com.ig.igtradinggame.ui.cards.BaseCardView;
 import com.ig.igtradinggame.ui.cards.CardModel;
 
@@ -62,7 +64,8 @@ public class OpenPositionFragment extends BaseFragment implements BaseCardView.O
     }
 
     private void setup() {
-        this.apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
+        BaseUrlStorage storage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
+        this.apiService = new IGAPIService(storage.loadBaseUrl());
 
         setupRecyclerView();
         setupCards();

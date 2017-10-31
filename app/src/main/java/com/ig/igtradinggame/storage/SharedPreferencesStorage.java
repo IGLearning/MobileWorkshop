@@ -5,22 +5,21 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.ig.igtradinggame.network.NetworkConfig;
+
 import java.util.Map;
 
-import static android.content.ContentValues.TAG;
-
-public class SharedPreferencesStorage implements ClientIDStorage {
+public class SharedPreferencesStorage implements ClientIDStorage, BaseUrlStorage {
     private static final String CLIENT_ID_KEY = "clientID";
+    private static final String BASE_URL_KEY = "baseUrl";
+
     private SharedPreferences sharedPreferences;
 
     public SharedPreferencesStorage(@NonNull final SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
-
-        Log.d(TAG, "SharedPreferencesStorage: Initialised object.");
-        printAllKeys();
-
     }
 
+    // FOR DEBUG ONLY!
     private void printAllKeys() {
         Map<String, ?> keys = sharedPreferences.getAll();
 
@@ -30,21 +29,31 @@ public class SharedPreferencesStorage implements ClientIDStorage {
     }
 
     public void saveClientID(@NonNull String clientId) {
-        Log.d(TAG, "saveClientID: SHARED");
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(CLIENT_ID_KEY, clientId);
         editor.commit();
-        printAllKeys();
     }
 
     @Nullable
+    @Override
     public String loadClientId() {
-        Log.d(TAG, "loadClientId: SHARED");
-        printAllKeys();
         return sharedPreferences.getString(CLIENT_ID_KEY, null);
     }
 
     public void deleteClientId() {
         sharedPreferences.edit().remove(CLIENT_ID_KEY).commit();
+    }
+
+    @Override
+    public void saveBaseURL(@NonNull String url) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(BASE_URL_KEY, url);
+        editor.commit();
+    }
+
+    @Nullable
+    @Override
+    public String loadBaseUrl() {
+        return sharedPreferences.getString(BASE_URL_KEY, NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL);
     }
 }

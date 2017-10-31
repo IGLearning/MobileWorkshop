@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.ClientModel;
 import com.ig.igtradinggame.network.IGAPIService;
-import com.ig.igtradinggame.network.NetworkConfig;
+import com.ig.igtradinggame.storage.BaseUrlStorage;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 
@@ -22,6 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+
+//import com.ig.igtradinggame.network.NetworkConfig;
 
 public class CreateUserSlide extends Fragment {
     private static final String ARG_LAYOUT_RES_ID = "layoutResId";
@@ -41,6 +43,7 @@ public class CreateUserSlide extends Fragment {
 
     private Unbinder unbinder;
     private int layoutResId;
+    private IGAPIService igApiService;
 
     public static CreateUserSlide newInstance(int layoutResId) {
         CreateUserSlide sampleSlide = new CreateUserSlide();
@@ -82,6 +85,10 @@ public class CreateUserSlide extends Fragment {
         clientFoundStatsText.setVisibility(View.GONE);
         submitButton.setVisibility(View.GONE);
 
+        // initialise the API
+        BaseUrlStorage baseUrlStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getContext()));
+        igApiService = new IGAPIService(baseUrlStorage.loadBaseUrl());
+
         // check sharedprefs for an existing clientid
         ClientIDStorage storage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getContext()));
         final String clientId = storage.loadClientId();
@@ -91,9 +98,7 @@ public class CreateUserSlide extends Fragment {
         } else {
             clientFoundStatsText.setVisibility(View.VISIBLE);
 
-            IGAPIService apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
-
-            apiService.getClientInfo(clientId, new IGAPIService.OnClientLoadedListener() {
+            igApiService.getClientInfo(clientId, new IGAPIService.OnClientLoadedListener() {
                 @Override
                 public void onComplete(ClientModel response) {
                     clientFoundStatsText.setText("Found an existing client!\n" + response.toString());
@@ -130,8 +135,7 @@ public class CreateUserSlide extends Fragment {
             return;
         }
 
-        IGAPIService apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
-        apiService.createClient(playerName, new IGAPIService.OnClientLoadedListener() {
+        igApiService.createClient(playerName, new IGAPIService.OnClientLoadedListener() {
             @Override
             public void onComplete(ClientModel response) {
                 successStatsText.setVisibility(View.VISIBLE);

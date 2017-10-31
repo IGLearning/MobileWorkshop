@@ -12,15 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ig.igtradinggame.R;
+import com.ig.igtradinggame.models.BalanceModel;
 import com.ig.igtradinggame.models.ClientModel;
+import com.ig.igtradinggame.models.UserDetailsModel;
 import com.ig.igtradinggame.network.IGAPIService;
-import com.ig.igtradinggame.network.NetworkConfig;
+import com.ig.igtradinggame.storage.BaseUrlStorage;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 import com.ig.igtradinggame.ui.cards.CardModel;
-import com.ig.igtradinggame.models.BalanceModel;
 import com.ig.igtradinggame.ui.cards.button.ButtonModel;
-import com.ig.igtradinggame.models.UserDetailsModel;
 
 import java.util.ArrayList;
 
@@ -44,6 +44,7 @@ public final class MyAccountFragment extends BaseFragment {
     private IGAPIService apiService;
     private String clientID;
     private ClientIDStorage clientIDStorage;
+    private BaseUrlStorage baseUrlStorage;
     private boolean shouldUpdatePrices = true;
 
     public MyAccountFragment() {
@@ -59,7 +60,10 @@ public final class MyAccountFragment extends BaseFragment {
     }
 
     private void setup() {
-        apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
+        baseUrlStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
+        final String baseUrl = baseUrlStorage.loadBaseUrl();
+
+        apiService = new IGAPIService(baseUrl);
         clientIDStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
         clientID = clientIDStorage.loadClientId();
         setupRecyclerView();

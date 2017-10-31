@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.OpenPositionModel;
 import com.ig.igtradinggame.network.IGAPIService;
-import com.ig.igtradinggame.network.NetworkConfig;
+import com.ig.igtradinggame.storage.BaseUrlStorage;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 import com.ig.igtradinggame.ui.cards.BaseCardView;
@@ -30,6 +30,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.content.ContentValues.TAG;
@@ -66,7 +67,8 @@ public class CurrentPositionsFragment extends BaseFragment implements BaseCardVi
     }
 
     private void setup() {
-        this.apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
+        BaseUrlStorage storage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
+        this.apiService = new IGAPIService(storage.loadBaseUrl());
         setupRecyclerView();
         setupCards();
     }
@@ -92,6 +94,12 @@ public class CurrentPositionsFragment extends BaseFragment implements BaseCardVi
         });
 
         apiService.getOpenPositionsStreaming(storage.loadClientId(), HEARTBEAT_FREQUENCY_MILLIS)
+                .takeWhile(new Predicate<List<OpenPositionModel>>() {
+                    @Override
+                    public boolean test(@NonNull List<OpenPositionModel> openPositionModels) throws Exception {
+                        return shouldUpdatePrices;
+                    }
+                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<OpenPositionModel>>() {
@@ -117,7 +125,6 @@ public class CurrentPositionsFragment extends BaseFragment implements BaseCardVi
 
                     }
                 });
-
     }
 
     private void setupRecyclerView() {

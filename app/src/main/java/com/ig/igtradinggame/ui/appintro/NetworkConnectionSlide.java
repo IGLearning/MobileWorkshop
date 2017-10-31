@@ -1,9 +1,9 @@
 package com.ig.igtradinggame.ui.appintro;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +12,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.ig.igtradinggame.R;
+import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.network.IGAPIService;
 import com.ig.igtradinggame.network.NetworkConfig;
-import com.ig.igtradinggame.models.MarketModel;
+import com.ig.igtradinggame.storage.BaseUrlStorage;
+import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 
 import java.util.List;
 
@@ -24,7 +26,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class NetworkConnectionSlide extends Fragment {
-    private static final String TAG = "AppIntroFragment1";
     private static final String ARG_LAYOUT_RES_ID = "layoutResId";
 
     @BindView(R.id.editText_baseApiAddress)
@@ -38,6 +39,7 @@ public class NetworkConnectionSlide extends Fragment {
 
     private Unbinder unbinder;
     private int layoutResId;
+    private BaseUrlStorage storage;
 
     public static NetworkConnectionSlide newInstance(int layoutResId) {
         NetworkConnectionSlide networkConnectionSlide = new NetworkConnectionSlide();
@@ -51,7 +53,7 @@ public class NetworkConnectionSlide extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e(TAG, "onCreate: ");
+
         if (getArguments() != null && getArguments().containsKey(ARG_LAYOUT_RES_ID)) {
             layoutResId = getArguments().getInt(ARG_LAYOUT_RES_ID);
         }
@@ -64,8 +66,17 @@ public class NetworkConnectionSlide extends Fragment {
         View view = inflater.inflate(layoutResId, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        storage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
 
-        baseApiAddress.setText(NetworkConfig.API_BASE_URL);
+        final String baseURL = storage.loadBaseUrl();
+
+        if (baseURL != null) {
+            baseApiAddress.setText(baseURL);
+        } else {
+            baseApiAddress.setText(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL);
+            storage.saveBaseURL(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL);
+        }
+
         connectionSuccessfulText.setVisibility(View.INVISIBLE);
 
         return view;
@@ -79,14 +90,25 @@ public class NetworkConnectionSlide extends Fragment {
 
     @OnClick(R.id.button_change_api)
     public void onChangeApiClicked() {
-        baseApiAddress.setEnabled(!baseApiAddress.isEnabled());
+
+        final String currentBaseURL = storage.loadBaseUrl();
+
+        if (currentBaseURL != null) {
+            if (currentBaseURL.equals(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL)) {
+                baseApiAddress.setText(NetworkConfig.LIVE_HEROKU_SERVER_URL);
+                storage.saveBaseURL(NetworkConfig.LIVE_HEROKU_SERVER_URL);
+            } else {
+                baseApiAddress.setText(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL);
+                storage.saveBaseURL(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL);
+            }
+        }
     }
 
 
     @OnClick(R.id.button_testConnection)
     public void onTestConnectionTapped() {
         testConnectionButton.setText("Loading...");
-        IGAPIService apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
+        IGAPIService apiService = new IGAPIService(storage.loadBaseUrl());
         apiService.getAllMarkets(new IGAPIService.OnMarketsLoadedCompleteListener() {
             @Override
             public void onComplete(List<MarketModel> marketList) {
