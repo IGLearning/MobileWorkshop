@@ -86,7 +86,7 @@ public class NetworkConnectionSlide extends Fragment {
     @OnClick(R.id.button_testConnection)
     public void onTestConnectionTapped() {
         testConnectionButton.setText("Loading...");
-        IGAPIService apiService = new IGAPIService();
+        IGAPIService apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
         apiService.getAllMarkets(new IGAPIService.OnMarketsLoadedCompleteListener() {
             @Override
             public void onComplete(List<MarketModel> marketList) {

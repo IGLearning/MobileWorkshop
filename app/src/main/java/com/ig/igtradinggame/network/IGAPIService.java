@@ -37,7 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public final class IGAPIService {
     private IGTradingGameAPI igTradingGameAPI;
 
-    public IGAPIService() {
+    public IGAPIService(String baseURL) {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -47,7 +47,7 @@ public final class IGAPIService {
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(NetworkConfig.API_BASE_URL)
+                .baseUrl(baseURL)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(client)
@@ -242,9 +242,9 @@ public final class IGAPIService {
      * @param onCompleteListener
      */
     public void closePosition(String clientId, String openPositionId, final OnClosePositionCompleteListener onCompleteListener) {
-        igTradingGameAPI.closePosition(clientId, openPositionId).enqueue(new Callback<Integer>() {
+        igTradingGameAPI.closePosition(clientId, openPositionId).enqueue(new Callback<Double>() {
             @Override
-            public void onResponse(Call<Integer> call, Response<Integer> response) {
+            public void onResponse(Call<Double> call, Response<Double> response) {
                 if (response.isSuccessful()) {
                     onCompleteListener.onComplete();
                 } else {
@@ -253,7 +253,7 @@ public final class IGAPIService {
             }
 
             @Override
-            public void onFailure(Call<Integer> call, Throwable t) {
+            public void onFailure(Call<Double> call, Throwable t) {
                 onCompleteListener.onError(t.getMessage());
             }
         });

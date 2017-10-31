@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.ClientModel;
 import com.ig.igtradinggame.network.IGAPIService;
+import com.ig.igtradinggame.network.NetworkConfig;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 
@@ -90,7 +91,7 @@ public class CreateUserSlide extends Fragment {
         } else {
             clientFoundStatsText.setVisibility(View.VISIBLE);
 
-            IGAPIService apiService = new IGAPIService();
+            IGAPIService apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
 
             apiService.getClientInfo(clientId, new IGAPIService.OnClientLoadedListener() {
                 @Override
@@ -129,7 +130,7 @@ public class CreateUserSlide extends Fragment {
             return;
         }
 
-        IGAPIService apiService = new IGAPIService();
+        IGAPIService apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
         apiService.createClient(playerName, new IGAPIService.OnClientLoadedListener() {
             @Override
             public void onComplete(ClientModel response) {

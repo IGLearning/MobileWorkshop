@@ -6,12 +6,12 @@ import android.view.ViewGroup;
 
 import com.ig.igtradinggame.ui.cards.CardModel;
 import com.ig.igtradinggame.ui.cards.balance.BalanceCard;
-import com.ig.igtradinggame.ui.cards.balance.BalanceModel;
+import com.ig.igtradinggame.models.BalanceModel;
 import com.ig.igtradinggame.ui.cards.BaseCardView;
 import com.ig.igtradinggame.ui.cards.button.ButtonCard;
 import com.ig.igtradinggame.ui.cards.button.ButtonModel;
 import com.ig.igtradinggame.ui.cards.userdetails.UserDetailsCard;
-import com.ig.igtradinggame.ui.cards.userdetails.UserDetailsModel;
+import com.ig.igtradinggame.models.UserDetailsModel;
 
 import java.util.ArrayList;
 
@@ -29,6 +29,8 @@ public class CardListAdapter extends RecyclerView.Adapter<BaseCardView> {
 
     @Override
     public BaseCardView onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        // TODO: Adding cards to the 'My Account' page? Add the types in as cases here
         switch (viewType) {
             case BalanceModel.TYPE:
                 return BalanceCard.newInstance(parent);

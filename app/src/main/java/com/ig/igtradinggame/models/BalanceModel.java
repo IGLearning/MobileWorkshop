@@ -1,4 +1,4 @@
-package com.ig.igtradinggame.ui.cards.balance;
+package com.ig.igtradinggame.models;
 
 import com.ig.igtradinggame.ui.cards.CardModel;
 

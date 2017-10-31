@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.OpenPositionModel;
 import com.ig.igtradinggame.network.IGAPIService;
+import com.ig.igtradinggame.network.NetworkConfig;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 import com.ig.igtradinggame.ui.cards.BaseCardView;
@@ -65,7 +66,7 @@ public class CurrentPositionsFragment extends BaseFragment implements BaseCardVi
     }
 
     private void setup() {
-        this.apiService = new IGAPIService();
+        this.apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
         setupRecyclerView();
         setupCards();
     }
