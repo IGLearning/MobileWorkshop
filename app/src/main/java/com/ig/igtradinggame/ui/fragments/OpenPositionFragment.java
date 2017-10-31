@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.network.IGAPIService;
+import com.ig.igtradinggame.network.NetworkConfig;
 import com.ig.igtradinggame.ui.cards.BaseCardView;
 import com.ig.igtradinggame.ui.cards.CardModel;
 
@@ -60,7 +61,7 @@ public class OpenPositionFragment extends BaseFragment implements BaseCardView.O
     }
 
     private void setup() {
-        this.apiService = new IGAPIService();
+        this.apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
 
         setupRecyclerView();
         setupCards();

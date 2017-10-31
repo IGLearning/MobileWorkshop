@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.ClientModel;
 import com.ig.igtradinggame.network.IGAPIService;
+import com.ig.igtradinggame.network.NetworkConfig;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 import com.ig.igtradinggame.ui.cards.CardModel;
@@ -58,7 +59,7 @@ public final class MyAccountFragment extends BaseFragment {
     }
 
     private void setup() {
-        apiService = new IGAPIService();
+        apiService = new IGAPIService(NetworkConfig.API_BASE_URL);
         clientIDStorage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
         clientID = clientIDStorage.loadClientId();
         setupRecyclerView();
