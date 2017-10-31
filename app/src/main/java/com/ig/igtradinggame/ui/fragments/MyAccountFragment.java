@@ -18,9 +18,9 @@ import com.ig.igtradinggame.network.NetworkConfig;
 import com.ig.igtradinggame.storage.ClientIDStorage;
 import com.ig.igtradinggame.storage.SharedPreferencesStorage;
 import com.ig.igtradinggame.ui.cards.CardModel;
-import com.ig.igtradinggame.ui.cards.balance.BalanceModel;
+import com.ig.igtradinggame.models.BalanceModel;
 import com.ig.igtradinggame.ui.cards.button.ButtonModel;
-import com.ig.igtradinggame.ui.cards.userdetails.UserDetailsModel;
+import com.ig.igtradinggame.models.UserDetailsModel;
 
 import java.util.ArrayList;
 

@@ -1,6 +1,5 @@
-package com.ig.igtradinggame.ui.cards.userdetails;
+package com.ig.igtradinggame.models;
 
-import com.ig.igtradinggame.models.ClientModel;
 import com.ig.igtradinggame.ui.cards.CardModel;
 
 public class UserDetailsModel extends CardModel {

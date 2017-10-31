@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ig.igtradinggame.R;
+import com.ig.igtradinggame.models.BalanceModel;
 import com.ig.igtradinggame.ui.cards.BaseCardView;
 import com.ig.igtradinggame.ui.cards.CardModel;
 
