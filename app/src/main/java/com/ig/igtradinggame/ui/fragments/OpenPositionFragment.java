@@ -128,6 +128,7 @@ public class OpenPositionFragment extends BaseFragment implements BaseCardView.O
         // OPEN THE BOTTOMSHEET
         Log.e(TAG, "onItemClick: yaeh");
         OpenPositionBottomsheetFragment bottomsheet = new OpenPositionBottomsheetFragment();
+        bottomsheet.addModel(cardModel);
         bottomsheet.show(getActivity().getSupportFragmentManager(), "Bottomsheet");
     }
 }

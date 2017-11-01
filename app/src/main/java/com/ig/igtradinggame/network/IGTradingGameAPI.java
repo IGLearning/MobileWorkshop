@@ -18,7 +18,6 @@ import retrofit2.http.Path;
 
 
 interface IGTradingGameAPI {
-
     // CLIENT CONTROLLER: Operations relating to the client
     @POST("/workshop/client/createClient")
     Call<ClientModel> createClient(@Body CreateClientRequest createClientRequest);

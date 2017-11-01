@@ -8,11 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.ig.igtradinggame.R;
+import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.models.OpenPositionModel;
 import com.ig.igtradinggame.network.IGAPIService;
 import com.ig.igtradinggame.storage.BaseUrlStorage;
@@ -76,23 +76,6 @@ public class CurrentPositionsFragment extends BaseFragment implements BaseCardVi
     private void setupCards() {
         ClientIDStorage storage = new SharedPreferencesStorage(PreferenceManager.getDefaultSharedPreferences(getActivity()));
 
-        currentPositionsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-                Log.e(TAG, "onTouchEvent: INTERCEPT TOUCH EVENT");
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
-
         apiService.getOpenPositionsStreaming(storage.loadClientId(), HEARTBEAT_FREQUENCY_MILLIS)
                 .takeWhile(new Predicate<List<OpenPositionModel>>() {
                     @Override
@@ -148,6 +131,13 @@ public class CurrentPositionsFragment extends BaseFragment implements BaseCardVi
 
     @Override
     public void onItemClick(CardModel cardModel) {
+        if (cardModel.getType() == MarketModel.TYPE) {
+            MarketModel marketModel = (MarketModel) cardModel;
+
+            Log.e(TAG, "onItemClick: Selected " + marketModel.toString());
+        }
+
+
         Log.e(TAG, "onItemClick: CARD CLICKED!");
     }
 }

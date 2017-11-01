@@ -11,5 +11,5 @@ public final class NetworkConfig {
      */
     public static final String EMULATOR_DEFAULT_LOCALHOST_URL = "http://10.0.2.2:8085/";
     public static final String LIVE_HEROKU_SERVER_URL = "https://glacial-plateau-36826.herokuapp.com/";
-    public static final HttpLoggingInterceptor.Level RETROFIT_LOGGING_LEVEL = HttpLoggingInterceptor.Level.BODY;
+    public static final HttpLoggingInterceptor.Level RETROFIT_LOGGING_LEVEL = HttpLoggingInterceptor.Level.BASIC;
 }
