@@ -1,7 +1,5 @@
 package com.ig.igtradinggame.models;
 
-import com.ig.igtradinggame.ui.cards.CardModel;
-
 /**
  * Note that this is a MODEL, so therefore should not have to
  * import any Android dependencies. This is core to Clean

@@ -1,7 +1,5 @@
 package com.ig.igtradinggame.models;
 
-import com.ig.igtradinggame.ui.cards.CardModel;
-
 public class UserDetailsModel extends CardModel {
     public static final int TYPE = 2;
 
