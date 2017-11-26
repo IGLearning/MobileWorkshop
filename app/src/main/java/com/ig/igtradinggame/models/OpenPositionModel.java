@@ -2,7 +2,6 @@ package com.ig.igtradinggame.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.ig.igtradinggame.ui.cards.CardModel;
 
 public class OpenPositionModel extends CardModel {
     public static final int TYPE = 5;

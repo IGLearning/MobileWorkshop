@@ -5,7 +5,8 @@ import com.ig.igtradinggame.models.ClientModel;
 import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.models.OpenPositionIdResponse;
 import com.ig.igtradinggame.models.OpenPositionModel;
-import com.ig.igtradinggame.network.requests.OpenPositionRequest;
+import com.ig.igtradinggame.features.maingame.trade.buy.OpenPositionRequest;
+import com.ig.igtradinggame.network.retrofit_impl.IGAPIService;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class IGAPIServiceTest {
     private static final String BASE_URL = "http://0.0.0.0:8085/"; // runs using localhost
     private static final int UPDATE_FREQUENCY_MILLIS = 500;
 
-    private IGAPIService api;
+    private IGAPIServiceInterface api;
     private String clientID = "client_1509483146163";
 
     @Before

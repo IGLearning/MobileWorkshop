@@ -2,7 +2,6 @@ package com.ig.igtradinggame.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.ig.igtradinggame.ui.cards.CardModel;
 
 public class MarketModel extends CardModel {
     public static final int TYPE = 4;
@@ -17,7 +16,7 @@ public class MarketModel extends CardModel {
 
     @SerializedName("currentPrice")
     @Expose
-    private float currentPrice;
+    private double currentPrice;
 
     public String getMarketId() {
         return marketId;
@@ -27,7 +26,7 @@ public class MarketModel extends CardModel {
         return marketName;
     }
 
-    public float getCurrentPrice() {
+    public double getCurrentPrice() {
         return currentPrice;
     }
 
