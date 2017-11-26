@@ -134,13 +134,9 @@ public class SellFragment extends BaseFragment implements BaseCardView.OnItemCli
 
     @Override
     public void onItemClick(CardModel cardModel) {
-        if (cardModel.getType() == MarketModel.TYPE) {
-            MarketModel marketModel = (MarketModel) cardModel;
-
-            Log.e(TAG, "onItemClick: Selected " + marketModel.toString());
-        }
-
-
-        Log.e(TAG, "onItemClick: CARD CLICKED!");
+        SellPopupView bottomsheet = new SellPopupView();
+        bottomsheet.addModel(cardModel);
+        bottomsheet.show(getActivity().getSupportFragmentManager(), "close_bottomsheet");
     }
+
 }

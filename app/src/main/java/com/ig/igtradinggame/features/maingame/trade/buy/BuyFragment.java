@@ -122,6 +122,6 @@ public class BuyFragment extends BaseFragment implements BaseCardView.OnItemClic
     public void onItemClick(CardModel cardModel) {
         ConfirmationPopupView bottomsheet = new ConfirmationPopupView();
         bottomsheet.addModel(cardModel);
-        bottomsheet.show(getActivity().getSupportFragmentManager(), "Bottomsheet");
+        bottomsheet.show(getActivity().getSupportFragmentManager(), "buy_bottomsheet");
     }
 }
