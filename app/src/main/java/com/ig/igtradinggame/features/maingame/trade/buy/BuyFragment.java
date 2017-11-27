@@ -8,9 +8,11 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.MarketModel;
+import com.ig.igtradinggame.models.OpenPositionIdResponse;
 import com.ig.igtradinggame.network.retrofit_impl.IGAPIService;
 import com.ig.igtradinggame.storage.AppStorage;
 import com.ig.igtradinggame.ui.BaseFragment;
@@ -120,8 +122,24 @@ public class BuyFragment extends BaseFragment implements BaseCardView.OnItemClic
 
     @Override
     public void onItemClick(CardModel cardModel) {
-        ConfirmationPopupView bottomsheet = new ConfirmationPopupView();
+        final ConfirmationPopupView bottomsheet = new ConfirmationPopupView();
         bottomsheet.addModel(cardModel);
-        bottomsheet.show(getActivity().getSupportFragmentManager(), "Bottomsheet");
+        bottomsheet.show(getActivity().getSupportFragmentManager(), "buy_bottomsheet");
+
+        bottomsheet.setPopupCallback(new ConfirmationPopupView.PopupCallback() {
+            @Override
+            public void onSuccess(OpenPositionIdResponse response) {
+                bottomsheet.dismiss();
+                cardModelList = new ArrayList<>();
+                adapter.notifyDataSetChanged();
+                setup();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                bottomsheet.dismiss();
+                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

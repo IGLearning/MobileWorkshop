@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ig.igtradinggame.R;
+import com.ig.igtradinggame.features.maingame.trade.sell.SellPopupView.PopupCallback;
 import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.models.OpenPositionModel;
 import com.ig.igtradinggame.network.retrofit_impl.IGAPIService;
@@ -134,13 +135,25 @@ public class SellFragment extends BaseFragment implements BaseCardView.OnItemCli
 
     @Override
     public void onItemClick(CardModel cardModel) {
-        if (cardModel.getType() == MarketModel.TYPE) {
-            MarketModel marketModel = (MarketModel) cardModel;
+        final SellPopupView bottomsheet = new SellPopupView();
+        bottomsheet.addModel(cardModel);
+        bottomsheet.show(getActivity().getSupportFragmentManager(), "close_bottomsheet");
 
-            Log.e(TAG, "onItemClick: Selected " + marketModel.toString());
-        }
+        bottomsheet.setPopupCallback(new PopupCallback() {
+            @Override
+            public void onSuccess() {
+                bottomsheet.dismiss();
+                cardModelList = new ArrayList<>();
+                adapter.notifyDataSetChanged();
+                setup();
+            }
 
+            @Override
+            public void onError(String errorMessage) {
 
-        Log.e(TAG, "onItemClick: CARD CLICKED!");
+            }
+        });
+
     }
+
 }
