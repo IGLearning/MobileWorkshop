@@ -21,8 +21,16 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 public class ConfirmationPopupView extends BottomSheetDialogFragment {
+    public interface PopupCallback {
+        void onSuccess(OpenPositionIdResponse response);
+
+        void onError(String errorMessage);
+    }
+
     private Unbinder unbinder;
     private CardModel cardModel;
+    private PopupCallback popupCallback;
+
     private BottomSheetBehavior.BottomSheetCallback callback = new BottomSheetBehavior.BottomSheetCallback() {
         @Override
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -40,6 +48,10 @@ public class ConfirmationPopupView extends BottomSheetDialogFragment {
 
     public void addModel(final CardModel cardmodel) {
         this.cardModel = cardmodel;
+    }
+
+    public void setPopupCallback(PopupCallback callback) {
+        this.popupCallback = callback;
     }
 
     @Override
@@ -81,13 +93,16 @@ public class ConfirmationPopupView extends BottomSheetDialogFragment {
             igapiService.openPosition(clientId, openPositionRequest, new IGAPIService.OnOpenPositionCompleteListener() {
                 @Override
                 public void onComplete(OpenPositionIdResponse openPositionIdResponse) {
-                    Toast.makeText(getContext(), "Bought!", Toast.LENGTH_SHORT).show();
+                    if (popupCallback != null) {
+                        popupCallback.onSuccess(openPositionIdResponse);
+                    }
                 }
 
                 @Override
                 public void onError(String errorMessage) {
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-
+                    if (popupCallback != null) {
+                        popupCallback.onError(errorMessage);
+                    }
                 }
             });
         }
