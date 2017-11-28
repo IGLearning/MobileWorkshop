@@ -2,38 +2,39 @@ package com.ig.igtradinggame.features.intropages.networkconnection;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.MarketModel;
-import com.ig.igtradinggame.network.retrofit_impl.IGAPIService;
 import com.ig.igtradinggame.network.NetworkConfig;
+import com.ig.igtradinggame.network.retrofit_impl.IGAPIService;
 import com.ig.igtradinggame.storage.AppStorage;
+import com.ig.igtradinggame.ui.BaseFragment;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
-public class NetworkConnectionSlide extends Fragment {
+public class NetworkConnectionSlide extends BaseFragment {
     private static final String ARG_LAYOUT_RES_ID = "layoutResId";
-    String currentBaseURL;
 
-    @BindView(R.id.editText_baseApiAddress)
-    EditText baseApiAddress;
     @BindView(R.id.textView_connectionSuccessful)
     TextView connectionSuccessfulText;
+
     @BindView(R.id.button_testConnection)
     Button testConnectionButton;
-    private Unbinder unbinder;
+
+    @BindView(R.id.switch_use_heroku)
+    Switch endpointSwitch;
+
     private int layoutResId;
 
     public static NetworkConnectionSlide newInstance(int layoutResId) {
@@ -61,61 +62,60 @@ public class NetworkConnectionSlide extends Fragment {
         View view = inflater.inflate(layoutResId, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        currentBaseURL = AppStorage.getInstance(getActivity()).loadBaseUrl();
-
-        if (currentBaseURL != null) {
-            baseApiAddress.setText(currentBaseURL);
-        } else {
-            baseApiAddress.setText(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL);
-            changeBaseUrl(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL);
-        }
-
-        connectionSuccessfulText.setVisibility(View.INVISIBLE);
-
+        setupBaseUrl();
         return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        unbinder.unbind();
-        super.onDestroyView();
-    }
+    private void setupBaseUrl() {
+        String currentBaseURL = AppStorage.getInstance(getActivity()).loadBaseUrl();
 
-    @OnClick(R.id.button_change_api)
-    public void onChangeApiClicked() {
-        if (currentBaseURL != null) {
-            if (currentBaseURL.equals(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL)) {
-                baseApiAddress.setText(NetworkConfig.LIVE_HEROKU_SERVER_URL);
-                changeBaseUrl(NetworkConfig.LIVE_HEROKU_SERVER_URL);
-            } else {
-                baseApiAddress.setText(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL);
-                changeBaseUrl(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL);
+        endpointSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                AppStorage.getInstance(getActivity()).saveBaseURL(
+                        isChecked ? NetworkConfig.LIVE_HEROKU_SERVER_URL : NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL
+                );
             }
+        });
+
+        if (currentBaseURL == null) {
+            endpointSwitch.setChecked(true);
+            AppStorage.getInstance(getActivity()).saveBaseURL(NetworkConfig.LIVE_HEROKU_SERVER_URL);
+            return;
+        }
+
+        if (currentBaseURL.equals(NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL)) {
+            endpointSwitch.setChecked(false);
+        } else {
+            endpointSwitch.setChecked(true);
         }
     }
 
-    private void changeBaseUrl(String newUrl) {
-        AppStorage.getInstance(getActivity()).saveBaseURL(newUrl);
-    }
-
-
     @OnClick(R.id.button_testConnection)
     public void onTestConnectionTapped() {
-        testConnectionButton.setText("Loading...");
-        IGAPIService apiService = new IGAPIService(currentBaseURL);
+        testConnectionButton.setVisibility(View.GONE);
+        connectionSuccessfulText.setVisibility(View.GONE);
+
+        final String baseUrl = AppStorage.getInstance(getActivity()).loadBaseUrl();
+
+        IGAPIService apiService = new IGAPIService(baseUrl);
         apiService.getAllMarkets(new IGAPIService.OnMarketsLoadedCompleteListener() {
             @Override
             public void onComplete(List<MarketModel> marketList) {
+                testConnectionButton.setVisibility(View.VISIBLE);
+
                 connectionSuccessfulText.setVisibility(View.VISIBLE);
-                testConnectionButton.setVisibility(View.GONE);
+                connectionSuccessfulText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+                connectionSuccessfulText.setText("Connected successfully.");
             }
 
             @Override
             public void onError(String errorMessage) {
-                testConnectionButton.setVisibility(View.GONE);
+                testConnectionButton.setVisibility(View.VISIBLE);
+
                 connectionSuccessfulText.setVisibility(View.VISIBLE);
                 connectionSuccessfulText.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-                connectionSuccessfulText.setText("Error: " + errorMessage);
+                connectionSuccessfulText.setText(errorMessage);
             }
         });
     }
