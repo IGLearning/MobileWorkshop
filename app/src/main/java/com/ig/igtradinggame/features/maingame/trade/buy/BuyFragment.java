@@ -8,17 +8,16 @@ import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.features.maingame.trade.buy.BuyPopupView.PopupCallback;
+import com.ig.igtradinggame.models.CardModel;
 import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.models.OpenPositionIdResponse;
 import com.ig.igtradinggame.network.retrofit_impl.IGAPIService;
 import com.ig.igtradinggame.storage.AppStorage;
-import com.ig.igtradinggame.ui.BaseFragment;
 import com.ig.igtradinggame.ui.BaseCardView;
-import com.ig.igtradinggame.models.CardModel;
+import com.ig.igtradinggame.ui.BaseFragment;
 import com.ig.igtradinggame.ui.CardListAdapter;
 
 import java.util.ArrayList;
@@ -134,12 +133,14 @@ public class BuyFragment extends BaseFragment implements BaseCardView.OnItemClic
                 cardModelList = new ArrayList<>();
                 adapter.notifyDataSetChanged();
                 setup();
+
+                showMessage("Purchased", false);
             }
 
             @Override
             public void onError(String errorMessage) {
                 bottomsheet.dismiss();
-                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                showMessage(errorMessage, true);
             }
         });
     }

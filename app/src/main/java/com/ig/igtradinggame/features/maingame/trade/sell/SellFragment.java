@@ -21,6 +21,7 @@ import com.ig.igtradinggame.ui.CardListAdapter;
 import com.ig.igtradinggame.ui.BaseCardView;
 import com.ig.igtradinggame.models.CardModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -134,7 +135,7 @@ public class SellFragment extends BaseFragment implements BaseCardView.OnItemCli
     }
 
     @Override
-    public void onItemClick(CardModel cardModel) {
+    public void onItemClick(final CardModel cardModel) {
         final SellPopupView bottomsheet = new SellPopupView();
         bottomsheet.addModel(cardModel);
         bottomsheet.show(getActivity().getSupportFragmentManager(), "close_bottomsheet");
@@ -146,11 +147,18 @@ public class SellFragment extends BaseFragment implements BaseCardView.OnItemCli
                 cardModelList = new ArrayList<>();
                 adapter.notifyDataSetChanged();
                 setup();
+
+                OpenPositionModel openPositionModel = (OpenPositionModel) cardModel;
+
+                DecimalFormat decimalFormat = new DecimalFormat("0.00");
+                String closingPnl = decimalFormat.format(openPositionModel.getProfitAndLoss());
+                showMessage("Sold, with approx closing pnl: " + closingPnl, false);
             }
 
             @Override
             public void onError(String errorMessage) {
-
+                bottomsheet.dismiss();
+                showMessage(errorMessage, true);
             }
         });
 

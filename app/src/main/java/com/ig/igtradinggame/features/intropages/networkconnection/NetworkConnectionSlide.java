@@ -25,16 +25,12 @@ import butterknife.OnClick;
 
 public class NetworkConnectionSlide extends BaseFragment {
     private static final String ARG_LAYOUT_RES_ID = "layoutResId";
-
     @BindView(R.id.textView_connectionSuccessful)
     TextView connectionSuccessfulText;
-
     @BindView(R.id.button_testConnection)
     Button testConnectionButton;
-
     @BindView(R.id.switch_use_heroku)
     Switch endpointSwitch;
-
     private int layoutResId;
 
     public static NetworkConnectionSlide newInstance(int layoutResId) {
