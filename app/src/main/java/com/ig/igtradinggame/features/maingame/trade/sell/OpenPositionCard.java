@@ -10,6 +10,8 @@ import com.ig.igtradinggame.models.OpenPositionModel;
 import com.ig.igtradinggame.ui.BaseCardView;
 import com.ig.igtradinggame.models.CardModel;
 
+import java.text.DecimalFormat;
+
 import butterknife.BindView;
 
 public class OpenPositionCard extends BaseCardView {
@@ -41,8 +43,10 @@ public class OpenPositionCard extends BaseCardView {
             OpenPositionModel openPositionsModel = (OpenPositionModel) cardView;
 
             marketName.setText(openPositionsModel.getMarketId());
-            marketBoughtAtPrice.setText(Double.toString(openPositionsModel.getProfitAndLoss()));
-            marketPrice.setText(Double.toString(openPositionsModel.getOpeningPrice()));
+
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+            marketBoughtAtPrice.setText(decimalFormat.format(openPositionsModel.getProfitAndLoss()));
+            marketPrice.setText(decimalFormat.format(openPositionsModel.getOpeningPrice()));
         }
     }
 }

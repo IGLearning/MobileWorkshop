@@ -6,9 +6,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ig.igtradinggame.R;
+import com.ig.igtradinggame.models.CardModel;
 import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.ui.BaseCardView;
-import com.ig.igtradinggame.models.CardModel;
+
+import java.text.DecimalFormat;
 
 import butterknife.BindView;
 
@@ -41,7 +43,9 @@ public class MarketCard extends BaseCardView {
 
             marketID.setText(marketModel.getMarketId());
             marketName.setText(marketModel.getMarketName());
-            marketPrice.setText(Double.toString(marketModel.getCurrentPrice()));
+
+            DecimalFormat decimalFormat = new DecimalFormat("0.00");
+            marketPrice.setText(decimalFormat.format(marketModel.getCurrentPrice()));
         }
     }
 }
