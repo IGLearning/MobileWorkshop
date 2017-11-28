@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.ig.igtradinggame.R;
+import com.ig.igtradinggame.features.maingame.trade.buy.BuyPopupView.PopupCallback;
 import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.models.OpenPositionIdResponse;
 import com.ig.igtradinggame.network.retrofit_impl.IGAPIService;
@@ -122,11 +123,11 @@ public class BuyFragment extends BaseFragment implements BaseCardView.OnItemClic
 
     @Override
     public void onItemClick(CardModel cardModel) {
-        final ConfirmationPopupView bottomsheet = new ConfirmationPopupView();
+        final BuyPopupView bottomsheet = new BuyPopupView();
         bottomsheet.addModel(cardModel);
         bottomsheet.show(getActivity().getSupportFragmentManager(), "buy_bottomsheet");
 
-        bottomsheet.setPopupCallback(new ConfirmationPopupView.PopupCallback() {
+        bottomsheet.setPopupCallback(new PopupCallback() {
             @Override
             public void onSuccess(OpenPositionIdResponse response) {
                 bottomsheet.dismiss();

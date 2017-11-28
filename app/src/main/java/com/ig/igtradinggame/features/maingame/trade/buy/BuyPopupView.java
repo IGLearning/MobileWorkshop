@@ -1,6 +1,7 @@
-package com.ig.igtradinggame.features.maingame.trade.sell;
+package com.ig.igtradinggame.features.maingame.trade.buy;
 
 import android.app.Dialog;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.view.View;
 import android.widget.Button;
@@ -8,7 +9,9 @@ import android.widget.ProgressBar;
 
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.models.CardModel;
-import com.ig.igtradinggame.models.OpenPositionModel;
+import com.ig.igtradinggame.models.MarketModel;
+import com.ig.igtradinggame.models.OpenPositionIdResponse;
+import com.ig.igtradinggame.network.IGAPIServiceInterface;
 import com.ig.igtradinggame.network.retrofit_impl.IGAPIService;
 import com.ig.igtradinggame.storage.AppStorage;
 
@@ -20,27 +23,27 @@ import butterknife.Unbinder;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class SellPopupView extends BottomSheetDialogFragment {
+public class BuyPopupView extends BottomSheetDialogFragment {
 
-    @BindView(R.id.progressBar_sell)
+    @BindView(R.id.progressBar_buy)
     ProgressBar progressBar;
 
-    @BindView(R.id.button_bottomsheet_sell)
-    Button sellButton;
+    @BindView(R.id.button_bottomsheet_buy)
+    Button buyButton;
 
     private Unbinder unbinder;
     private CardModel cardModel;
     private PopupCallback popupCallback;
 
-    public SellPopupView() {
+    public BuyPopupView() {
     } // required empty constructor
+
+    public void addModel(@NonNull final CardModel cardmodel) {
+        this.cardModel = cardmodel;
+    }
 
     public void setPopupCallback(PopupCallback callback) {
         this.popupCallback = callback;
-    }
-
-    public void addModel(final CardModel cardmodel) {
-        this.cardModel = cardmodel;
     }
 
     @Override
@@ -51,41 +54,43 @@ public class SellPopupView extends BottomSheetDialogFragment {
 
     @Override
     public void setupDialog(Dialog dialog, int style) {
-        super.setupDialog(dialog, style); // not a real warning, is an Android Studio bug
-
-        View content = View.inflate(getContext(), R.layout.bottomsheet_sell, null);
+        super.setupDialog(dialog, style); // not a real error, is an Android Studio bug
+        View content = View.inflate(getContext(), R.layout.bottomsheet_buy, null);
         dialog.setContentView(content);
 
         unbinder = ButterKnife.bind(this, content);
         progressBar.setVisibility(GONE);
     }
 
-    @OnClick(R.id.button_bottomsheet_sell)
-    public void sellTapped() {
+    @OnClick(R.id.button_bottomsheet_buy)
+    public void buyTapped() {
         if (cardModel == null) {
             return;
         }
 
-        if (cardModel.getType() == OpenPositionModel.TYPE) {
-            final OpenPositionModel openPositionModel = (OpenPositionModel) cardModel;
-            closePosition(openPositionModel);
+        if (cardModel.getType() == MarketModel.TYPE) {
+            MarketModel marketModel = (MarketModel) cardModel;
+            openPositionForMarket(marketModel);
 
             progressBar.setIndeterminate(true);
             progressBar.setVisibility(VISIBLE);
-            sellButton.setVisibility(GONE);
+            buyButton.setVisibility(GONE);
         }
     }
 
-    private void closePosition(OpenPositionModel openPositionModel) {
+    private void openPositionForMarket(MarketModel marketModel) {
         final String baseUrl = AppStorage.getInstance(getActivity()).loadBaseUrl();
         final String clientId = AppStorage.getInstance(getActivity()).loadClientId();
-        final IGAPIService igapiService = new IGAPIService(baseUrl);
+        final IGAPIServiceInterface igapiService = new IGAPIService(baseUrl);
 
-        igapiService.closePosition(clientId, openPositionModel.getId(), new IGAPIService.OnClosePositionCompleteListener() {
+        final OpenPositionRequest openPositionRequest = new OpenPositionRequest(marketModel.getMarketId(), 1);
+
+        igapiService.openPosition(clientId, openPositionRequest, new IGAPIService.OnOpenPositionCompleteListener() {
             @Override
-            public void onComplete() {
+            public void onComplete(OpenPositionIdResponse openPositionIdResponse) {
                 if (popupCallback != null) {
-                    popupCallback.onSuccess();
+                    progressBar.setProgress(100);
+                    popupCallback.onSuccess(openPositionIdResponse);
                 }
             }
 
@@ -98,8 +103,8 @@ public class SellPopupView extends BottomSheetDialogFragment {
         });
     }
 
-    public interface PopupCallback {
-        void onSuccess();
+    interface PopupCallback {
+        void onSuccess(OpenPositionIdResponse response);
 
         void onError(String errorMessage);
     }
