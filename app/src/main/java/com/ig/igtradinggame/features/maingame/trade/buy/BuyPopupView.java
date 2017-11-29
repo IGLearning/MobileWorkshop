@@ -23,7 +23,7 @@ import butterknife.Unbinder;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class BuyPopupView extends BottomSheetDialogFragment {
+public class BuyPopupView extends BottomSheetDialogFragment implements IGAPIService.OnOpenPositionCompleteListener {
 
     @BindView(R.id.progressBar_buy)
     ProgressBar progressBar;
@@ -85,22 +85,25 @@ public class BuyPopupView extends BottomSheetDialogFragment {
 
         final OpenPositionRequest openPositionRequest = new OpenPositionRequest(marketModel.getMarketId(), 1);
 
-        igapiService.openPosition(clientId, openPositionRequest, new IGAPIService.OnOpenPositionCompleteListener() {
-            @Override
-            public void onComplete(OpenPositionIdResponse openPositionIdResponse) {
-                if (popupCallback != null) {
-                    progressBar.setProgress(100);
-                    popupCallback.onSuccess(openPositionIdResponse);
-                }
-            }
+        popupCallback.onError("I'm broken :(");
 
-            @Override
-            public void onError(String errorMessage) {
-                if (popupCallback != null) {
-                    popupCallback.onError(errorMessage);
-                }
-            }
-        });
+        // Hmm. Looks like someone forgot to make an API call here.
+        // TIP: Don't know how to make a OnOpenPositionCompleteListener? Try just using 'this'
+    }
+
+    @Override
+    public void onComplete(OpenPositionIdResponse openPositionIdResponse) {
+        if (popupCallback != null) {
+            progressBar.setProgress(100);
+            popupCallback.onSuccess(openPositionIdResponse);
+        }
+    }
+
+    @Override
+    public void onError(String errorMessage) {
+        if (popupCallback != null) {
+            popupCallback.onError(errorMessage);
+        }
     }
 
     interface PopupCallback {

@@ -12,14 +12,13 @@ import android.view.ViewGroup;
 
 import com.ig.igtradinggame.R;
 import com.ig.igtradinggame.features.maingame.about.button.ButtonModel;
-import com.ig.igtradinggame.models.BalanceModel;
+import com.ig.igtradinggame.features.maingame.about.profilecard.ProfileModel;
+import com.ig.igtradinggame.models.CardModel;
 import com.ig.igtradinggame.models.ClientModel;
-import com.ig.igtradinggame.models.UserDetailsModel;
 import com.ig.igtradinggame.network.retrofit_impl.IGAPIService;
 import com.ig.igtradinggame.storage.AppStorage;
 import com.ig.igtradinggame.ui.BaseFragment;
 import com.ig.igtradinggame.ui.CardListAdapter;
-import com.ig.igtradinggame.models.CardModel;
 
 import java.util.ArrayList;
 
@@ -96,11 +95,14 @@ public final class MyAccountFragment extends BaseFragment {
     }
 
     private void setupCards() {
-        cardModelList.add(new BalanceModel(0));
-        startUpdatingBalance(0);
+        cardModelList.add(new ProfileModel(
+                "Loading....",
+                "Loading",
+                "Loading",
+                "Loading"
+        ));
 
-        cardModelList.add(new UserDetailsModel(null));
-        startUpdatingUserDetails(1);
+        startUpdatingProfile(0);
 
         cardModelList.add(new ButtonModel(new ButtonModel.ButtonClickListener() {
             @Override
@@ -110,7 +112,7 @@ public final class MyAccountFragment extends BaseFragment {
         }));
     }
 
-    private void startUpdatingBalance(final int cardPosition) {
+    private void startUpdatingProfile(final int cardPosition) {
         apiService.getClientInfoStreaming(clientId, HEARTBEAT_FREQUENCY_MILLIS)
                 .takeWhile(new Predicate<ClientModel>() {
                     @Override
@@ -126,7 +128,7 @@ public final class MyAccountFragment extends BaseFragment {
 
                     @Override
                     public void onNext(@NonNull ClientModel clientModel) {
-                        BalanceModel model = new BalanceModel(clientModel.getAvailableFunds());
+                        ProfileModel model = new ProfileModel(clientModel);
                         cardModelList.set(cardPosition, model);
                         adapter.notifyItemChanged(cardPosition);
                     }
@@ -137,40 +139,6 @@ public final class MyAccountFragment extends BaseFragment {
 
                     @Override
                     public void onComplete() {
-                    }
-                });
-    }
-
-    private void startUpdatingUserDetails(final int cardPosition) {
-        apiService.getClientInfoStreaming(clientId, HEARTBEAT_FREQUENCY_MILLIS)
-                .takeWhile(new Predicate<ClientModel>() {
-                    @Override
-                    public boolean test(@NonNull ClientModel clientModel) throws Exception {
-                        return shouldUpdatePrices;
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ClientModel>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(@NonNull ClientModel clientModel) {
-                        UserDetailsModel model = new UserDetailsModel(clientModel);
-                        cardModelList.set(cardPosition, model);
-                        adapter.notifyItemChanged(cardPosition);
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
                     }
                 });
     }

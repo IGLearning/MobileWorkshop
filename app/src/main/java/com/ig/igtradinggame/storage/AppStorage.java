@@ -4,7 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.ig.igtradinggame.models.MarketModel;
 import com.ig.igtradinggame.network.NetworkConfig;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import io.reactivex.annotations.NonNull;
 
@@ -15,6 +22,7 @@ import io.reactivex.annotations.NonNull;
 public class AppStorage {
     private static final String CLIENT_ID_KEY = "clientID";
     private static final String BASE_URL_KEY = "baseUrl";
+    private static final String MARKET_IDS_KEY = "marketIds";
 
     private static AppStorage instance = null;
     private SharedPreferences sharedPreferences;
@@ -53,5 +61,29 @@ public class AppStorage {
 
     public String loadBaseUrl() {
         return sharedPreferences.getString(BASE_URL_KEY, NetworkConfig.EMULATOR_DEFAULT_LOCALHOST_URL);
+    }
+
+    public void saveMarketNames(List<MarketModel> marketModels) {
+        Map<String, String> valueMap = new HashMap<>();
+
+        for (MarketModel model : marketModels) {
+            valueMap.put(model.getMarketId(), model.getMarketName());
+        }
+
+        Gson gson = new Gson();
+        String json = gson.toJson(valueMap);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(MARKET_IDS_KEY, json);
+        editor.commit();
+    }
+
+    public Map<String, String> loadMarketNames() {
+        String storedHashMapString = sharedPreferences.getString(MARKET_IDS_KEY, "");
+        java.lang.reflect.Type type = new TypeToken<HashMap<String, String>>() {
+        }.getType();
+
+        Gson gson = new Gson();
+        return gson.fromJson(storedHashMapString, type);
     }
 }
